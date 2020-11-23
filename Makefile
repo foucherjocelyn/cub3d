@@ -6,7 +6,7 @@ NAME	= cub3d
 
 CC		= clang-9 
 
-CFLAGS	= -Wall -Werror -Wextra
+CFLAGS	= -Wall -Werror -Wextra -g3 -fsanitize=address
 
 RM		= rm -f
 
@@ -14,7 +14,7 @@ RM		= rm -f
 		$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJS)
-			$(CC) -o $(NAME) $(OBJS) -lmlx -lXext -lX11 -lm -lbsd
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lmlx -lXext -lX11 -lm -lbsd
 
 
 all:		$(NAME)

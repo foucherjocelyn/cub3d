@@ -1,12 +1,15 @@
 #include "mlx.h"
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #define mapWidth 24
 #define mapHeight 24
-#define screenWidth 640
-#define screenHeight 480
+#define texWidth 64
+#define texHeight 64
+#define screenWidth 1280
+#define screenHeight 1024
 
 typedef struct  s_data {
 	void        *img;
@@ -14,6 +17,8 @@ typedef struct  s_data {
 	int         bits_per_pixel;
 	int         line_length;
 	int         endian;
+	int			w;
+	int			h;
 }               t_data;
 
 typedef struct	s_ptr {
@@ -21,36 +26,39 @@ typedef struct	s_ptr {
 	void *win;
 }				t_ptr;
 
-int		render(t_ptr *ptr);
+int		render(t_data *texture);
+
+t_ptr ptr;
 
 double dirX, dirY, posX, posY, moveSpeed, rotSpeed, planeX, planeY;
 
+
 int worldMap[mapWidth][mapHeight]=
 {
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-	{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+	{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+	{4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+	{4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+	{4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+	{4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+	{4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+	{4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+	{4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+	{4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+	{4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+	{4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+	{6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+	{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+	{6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+	{4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+	{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+	{4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+	{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+	{4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+	{4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+	{4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+	{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+	{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 };
 
 void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -61,9 +69,9 @@ void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int	key_press(int keycode, t_ptr *ptr)
+int	key_press(int keycode)
 {
-	printf("%d\n", keycode);
+	//printf("%d\n", keycode);
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
@@ -112,17 +120,16 @@ int	key_press(int keycode, t_ptr *ptr)
 	}
 	if (keycode == 65307)
 		exit(0);
-	render(ptr);
 	return(0);
 }
 
-int		render(t_ptr *ptr)
+int		render(t_data *texture)
 {
 	int w = screenWidth;
 	int h = screenHeight;
 	t_data img;
 
-	img.img = mlx_new_image(ptr->mlx, w, h);
+	img.img = mlx_new_image(ptr.mlx, w, h);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	for(int x = 0; x < w; x++)
 	{
@@ -200,45 +207,69 @@ int		render(t_ptr *ptr)
 		if(drawStart < 0)drawStart = 0;
 		int drawEnd = lineHeight / 2 + h / 2;
 		if(drawEnd >= h)drawEnd = h - 1;
-		//choose wall color
-		unsigned int color;
-		switch(worldMap[mapX][mapY])
+		//texturing calculations
+		int texNum = worldMap[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
+
+		//calculate value of wallX
+		double wallX; //where exactly the wall was hit
+		if (side == 0) wallX = posY + perpWallDist * rayDirY;
+		else           wallX = posX + perpWallDist * rayDirX;
+		wallX -= floor((wallX));
+
+		//x coordinate on the texture
+		int texX = (int)(wallX * (double)texWidth);
+		if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+		if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+
+		// How much to increase the texture coordinate per screen pixel
+		double step = 1.0 * texHeight / lineHeight;
+		// Starting texture coordinate
+		double texPos = (drawStart - h / 2 + lineHeight / 2) * step;
+		for(int y = drawStart; y<drawEnd; y++)
 		{
-			case 1:  color = 0xFF0000;  break; //red
-			case 2:  color = 0x00FF00;  break; //green
-			case 3:  color = 0x0000FF;   break; //blue
-			case 4:  color = 0xFFFFFF;  break; //white
-			default: color = 0xFFFF00; break; //yellow
-		}
-
-		//give x and y sides different brightness
-		if (side == 1) {color = color / 2;}
-
-		//draw the pixels of the stripe as a vertical line
-		for (int y = drawStart; y < drawEnd; y++)
+			// Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+			int texY = (int)texPos & (texHeight - 1);
+			texPos += step;
+			unsigned int color = *(unsigned int*)(texture[texNum].addr + (texY * texture[texNum].line_length + texX * (texture[texNum].bits_per_pixel / 8)));
+			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+			if(side == 1) color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&img, x, y, color);
+		}
 	}
-	mlx_put_image_to_window(ptr->mlx, ptr->win, img.img, 0, 0);
-	mlx_destroy_image(ptr->mlx, img.img);
-	printf("%f %f\n", posX, posY);
+	mlx_put_image_to_window(ptr.mlx, ptr.win, img.img, 0, 0);
+	mlx_destroy_image(ptr.mlx, img.img);
 	return(0);
+}
+
+void	load_image(t_data *img, char *path)
+{
+	img->img = mlx_xpm_file_to_image(ptr.mlx, path, &img->w, &img->h);
+	img->addr = mlx_get_data_addr(img->img, &(img->bits_per_pixel), &(img->line_length), &(img->endian));
 }
 
 int main(void)
 {
-	posX = 22, posY = 12;  //x and y start position
+	posX = 22.0, posY = 11.5;  //x and y start position
 	dirX = -1, dirY = 0; //initial direction vector
 	planeX = 0, planeY = 0.66; //the 2d raycaster version of camera plane
-	t_ptr ptr;
 
 	ptr.mlx = mlx_init();
 	ptr.win = mlx_new_window(ptr.mlx, screenWidth, screenHeight, "cub3d");
-	printf("|||\n");
+	t_data	texture[8];
+	load_image(&(texture[0]), "pics/eagle.xpm");
+	load_image(&(texture[1]), "pics/redbrick.xpm");
+	load_image(&(texture[2]), "pics/purplestone.xpm");
+	load_image(&(texture[3]), "pics/greystone.xpm");
+	load_image(&(texture[4]), "pics/bluestone.xpm");
+	load_image(&(texture[5]), "pics/mossy.xpm");
+	load_image(&(texture[6]), "pics/wood.xpm");
+	load_image(&(texture[7]), "pics/colorstone.xpm");
 	//speed modifiers
-	moveSpeed = 0.3; //the constant value is in squares/second
+	moveSpeed = 0.2; //the constant value is in squares/second
 	rotSpeed = 0.1; //the constant value is in radians/second
-	render(&ptr);
-	mlx_hook(ptr.win, 2, 1L<<0, key_press, &ptr);
-//	mlx_loop_hook(ptr.mlx, render, &ptr);
+	render(texture);
+	mlx_hook(ptr.win, 2, 1L<<0, key_press, 0);
+	//	mlx_do_sync(ptr.mlx);
+	mlx_loop_hook(ptr.mlx, render, texture);
 	mlx_loop(ptr.mlx);
 }
