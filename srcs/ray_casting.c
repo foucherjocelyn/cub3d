@@ -235,6 +235,10 @@ int		render(t_data *texture)
 			if(side == 1) color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&img, x, y, color);
 		}
+		for(int y = 0; y<drawStart; y++)
+			my_mlx_pixel_put(&img, x, y, 0x00FF00);
+		for(int y = drawEnd; y<h; y++)
+			my_mlx_pixel_put(&img, x, y, 0xFF0000);
 	}
 	mlx_put_image_to_window(ptr.mlx, ptr.win, img.img, 0, 0);
 	mlx_destroy_image(ptr.mlx, img.img);
