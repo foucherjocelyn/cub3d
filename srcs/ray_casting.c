@@ -2,34 +2,31 @@
 
 t_sprite sprite[NUM_SPRITES] =
 {
-	{20.5, 11.5, 10}, //green light in front of playerstart
+	{20.5, 11.5, 4}, //green light in front of playerstart
 	//green lights in every room
-	{18.5,4.5, 10},
-	{10.0,4.5, 10},
-	{10.0,12.5,10},
-	{3.5, 6.5, 10},
-	{3.5, 20.5,10},
-	{3.5, 14.5,10},
-	{14.5,20.5,10},
+	{18.5,4.5, 4},
+	{10.0,4.5, 4},
+	{10.0,12.5,4},
+	{3.5, 6.5, 4},
+	{3.5, 20.5,4},
+	{3.5, 14.5,4},
+	{14.5,20.5,4},
 
 	//row of pillars in front of wall: fisheye test
-	{18.5, 10.5, 9},
-	{18.5, 11.5, 9},
-	{18.5, 12.5, 9},
+	{18.5, 10.5, 4},
+	{18.5, 11.5, 4},
+	{18.5, 12.5, 4},
 
 	//some barrels around the map
-	{21.5, 1.5, 8},
-	{15.5, 1.5, 8},
-	{16.0, 1.8, 8},
-	{16.2, 1.2, 8},
-	{3.5,  2.5, 8},
-	{9.5, 15.5, 8},
-	{10.0, 15.1,8},
-	{10.5, 15.8,8},
+	{21.5, 1.5, 4},
+	{15.5, 1.5, 4},
+	{16.0, 1.8, 4},
+	{16.2, 1.2, 4},
+	{3.5,  2.5, 4},
+	{9.5, 15.5, 4},
+	{10.0, 15.1,4},
+	{10.5, 15.8,4},
 };
-
-//1D Zbuffer
-double ZBuffer[SCREEN_WIDTH];
 
 //arrays used to sort the sprites
 int spriteOrder[NUM_SPRITES];
@@ -52,48 +49,48 @@ int	key_press(int keycode)
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
-		if(g_world_map[(int)(g_pos_x + g_dir_x * g_move_speed)][(int)g_pos_y] == 0) g_pos_x += g_dir_x * g_move_speed;
-		if(g_world_map[(int)g_pos_x][(int)(g_pos_y + g_dir_y * g_move_speed)] == 0) g_pos_y += g_dir_y * g_move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.dir_y * g_p.move_speed;
 	}
 	//move backwards if no wall behind you
 	if (keycode == 115)
 	{
-		if(g_world_map[(int)(g_pos_x - g_dir_x * g_move_speed)][(int)g_pos_y] == 0) g_pos_x -= g_dir_x * g_move_speed;
-		if(g_world_map[(int)g_pos_x][(int)(g_pos_y - g_dir_y * g_move_speed)] == 0) g_pos_y -= g_dir_y * g_move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
 	}
 	//move to the left if no wall behind you
 	if (keycode == 97)
 	{
-		if(g_world_map[(int)(g_pos_x - g_plane_x * g_move_speed)][(int)g_pos_y] == 0) g_pos_x -= g_plane_x * g_move_speed;
-		if(g_world_map[(int)g_pos_x][(int)(g_pos_y - g_plane_y * g_move_speed)] == 0) g_pos_y -= g_plane_y * g_move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
 	}
 	//move to the right if no wall behind you
 	if (keycode == 100)
 	{
-		if(g_world_map[(int)(g_pos_x + g_plane_x * g_move_speed)][(int)g_pos_y] == 0) g_pos_x += g_plane_x * g_move_speed;
-		if(g_world_map[(int)g_pos_x][(int)(g_pos_y + g_plane_y * g_move_speed)] == 0) g_pos_y += g_plane_y * g_move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.plane_y * g_p.move_speed;
 	}
 	//rotate to the right
 	if (keycode == 65363)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = g_dir_x;
-		g_dir_x = g_dir_x * cos(-g_rot_speed) - g_dir_y * sin(-g_rot_speed);
-		g_dir_y = oldDirX * sin(-g_rot_speed) + g_dir_y * cos(-g_rot_speed);
-		double oldPlaneX = g_plane_x;
-		g_plane_x = g_plane_x * cos(-g_rot_speed) - g_plane_y * sin(-g_rot_speed);
-		g_plane_y = oldPlaneX * sin(-g_rot_speed) + g_plane_y * cos(-g_rot_speed);
+		double oldDirX = g_p.dir_x;
+		g_p.dir_x = g_p.dir_x * cos(-g_p.rot_speed) - g_p.dir_y * sin(-g_p.rot_speed);
+		g_p.dir_y = oldDirX * sin(-g_p.rot_speed) + g_p.dir_y * cos(-g_p.rot_speed);
+		double oldPlaneX = g_p.plane_x;
+		g_p.plane_x = g_p.plane_x * cos(-g_p.rot_speed) - g_p.plane_y * sin(-g_p.rot_speed);
+		g_p.plane_y = oldPlaneX * sin(-g_p.rot_speed) + g_p.plane_y * cos(-g_p.rot_speed);
 	}
 	//rotate to the left
 	if (keycode == 65361)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = g_dir_x;
-		g_dir_x = g_dir_x * cos(g_rot_speed) - g_dir_y * sin(g_rot_speed);
-		g_dir_y = oldDirX * sin(g_rot_speed) + g_dir_y * cos(g_rot_speed);
-		double oldPlaneX = g_plane_x;
-		g_plane_x = g_plane_x * cos(g_rot_speed) - g_plane_y * sin(g_rot_speed);
-		g_plane_y = oldPlaneX * sin(g_rot_speed) + g_plane_y * cos(g_rot_speed);
+		double oldDirX = g_p.dir_x;
+		g_p.dir_x = g_p.dir_x * cos(g_p.rot_speed) - g_p.dir_y * sin(g_p.rot_speed);
+		g_p.dir_y = oldDirX * sin(g_p.rot_speed) + g_p.dir_y * cos(g_p.rot_speed);
+		double oldPlaneX = g_p.plane_x;
+		g_p.plane_x = g_p.plane_x * cos(g_p.rot_speed) - g_p.plane_y * sin(g_p.rot_speed);
+		g_p.plane_y = oldPlaneX * sin(g_p.rot_speed) + g_p.plane_y * cos(g_p.rot_speed);
 	}
 	if (keycode == 65307)
 		exit(0);
@@ -102,8 +99,8 @@ int	key_press(int keycode)
 
 int		render(t_data *texture)
 {
-	int w = SCREEN_WIDTH;
-	int h = SCREEN_HEIGHT;
+	int w = g_s.r_width;
+	int h = g_s.r_height;
 	t_data img;
 
 	img.img = mlx_new_image(g_ptr.mlx, w, h);
@@ -112,11 +109,11 @@ int		render(t_data *texture)
 	{
 		//calculate ray position and direction
 		double cameraX = 2 * x / (double)w - 1; //x-coordinate in camera space
-		double rayDirX = g_dir_x + g_plane_x * cameraX;
-		double rayDirY = g_dir_y + g_plane_y * cameraX;
+		double rayDirX = g_p.dir_x + g_p.plane_x * cameraX;
+		double rayDirY = g_p.dir_y + g_p.plane_y * cameraX;
 		//which box of the map we're in
-		int mapX = (int)g_pos_x;
-		int mapY = (int)g_pos_y;
+		int mapX = (int)g_p.pos_x;
+		int mapY = (int)g_p.pos_y;
 
 		//length of ray from current position to next x or y-side
 		double sideDistX;
@@ -137,22 +134,22 @@ int		render(t_data *texture)
 		if (rayDirX < 0)
 		{
 			stepX = -1;
-			sideDistX = (g_pos_x - mapX) * deltaDistX;
+			sideDistX = (g_p.pos_x - mapX) * deltaDistX;
 		}
 		else
 		{
 			stepX = 1;
-			sideDistX = (mapX + 1.0 - g_pos_x) * deltaDistX;
+			sideDistX = (mapX + 1.0 - g_p.pos_x) * deltaDistX;
 		}
 		if (rayDirY < 0)
 		{
 			stepY = -1;
-			sideDistY = (g_pos_y - mapY) * deltaDistY;
+			sideDistY = (g_p.pos_y - mapY) * deltaDistY;
 		}
 		else
 		{
 			stepY = 1;
-			sideDistY = (mapY + 1.0 - g_pos_y) * deltaDistY;
+			sideDistY = (mapY + 1.0 - g_p.pos_y) * deltaDistY;
 		}
 		//perform DDA
 		while (hit == 0)
@@ -171,11 +168,11 @@ int		render(t_data *texture)
 				side = 1;
 			}
 			//Check if ray has hit a wall
-			if (g_world_map[mapX][mapY] > 0) hit = 1;
+			if (g_world_map[mapX][mapY] == 1) hit = 1;
 		} 
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-		if (side == 0) perpWallDist = (mapX - g_pos_x + (1 - stepX) / 2) / rayDirX;
-		else           perpWallDist = (mapY - g_pos_y + (1 - stepY) / 2) / rayDirY;
+		if (side == 0) perpWallDist = (mapX - g_p.pos_x + (1 - stepX) / 2) / rayDirX;
+		else           perpWallDist = (mapY - g_p.pos_y + (1 - stepY) / 2) / rayDirY;
 		//Calculate height of line to draw on screen
 		int lineHeight = (int)(h / perpWallDist);
 
@@ -189,8 +186,8 @@ int		render(t_data *texture)
 
 		//calculate value of wallX
 		double wallX; //where exactly the wall was hit
-		if (side == 0) wallX = g_pos_y + perpWallDist * rayDirY;
-		else           wallX = g_pos_x + perpWallDist * rayDirX;
+		if (side == 0) wallX = g_p.pos_y + perpWallDist * rayDirY;
+		else           wallX = g_p.pos_x + perpWallDist * rayDirX;
 		wallX -= floor((wallX));
 
 		//x coordinate on the texture
@@ -217,7 +214,7 @@ int		render(t_data *texture)
 		for(int y = drawEnd; y<h; y++)
 			my_mlx_pixel_put(&img, x, y, 0xBBBBBB);
 		//SET THE ZBUFFER FOR THE SPRITE CASTING
-		ZBuffer[x] = perpWallDist; //perpendicular distance is used
+		g_p.z_buffer[x] = perpWallDist; //perpendicular distance is used
 	}
 
 	//SPRITE CASTING
@@ -225,7 +222,7 @@ int		render(t_data *texture)
 	for(int i = 0; i < NUM_SPRITES; i++)
 	{
 		spriteOrder[i] = i;
-		spriteDistance[i] = ((g_pos_x - sprite[i].x) * (g_pos_x - sprite[i].x) + (g_pos_y - sprite[i].y) * (g_pos_y - sprite[i].y)); //sqrt not taken, unneeded
+		spriteDistance[i] = ((g_p.pos_x - sprite[i].x) * (g_p.pos_x - sprite[i].x) + (g_p.pos_y - sprite[i].y) * (g_p.pos_y - sprite[i].y)); //sqrt not taken, unneeded
 	}
 	sortSprites(spriteOrder, spriteDistance, NUM_SPRITES);
 
@@ -233,18 +230,18 @@ int		render(t_data *texture)
 	for(int i = 0; i < NUM_SPRITES; i++)
 	{
 		//translate sprite position to relative to camera
-		double spriteX = sprite[spriteOrder[i]].x - g_pos_x;
-		double spriteY = sprite[spriteOrder[i]].y - g_pos_y;
+		double spriteX = sprite[spriteOrder[i]].x - g_p.pos_x;
+		double spriteY = sprite[spriteOrder[i]].y - g_p.pos_y;
 
 		//transform sprite with the inverse camera matrix
-		// [ g_plane_x   g_dir_x ] -1                                       [ g_dir_y      -g_dir_x ]
-		// [               ]       =  1/(g_plane_x*g_dir_y-g_dir_x*g_plane_y) *   [                 ]
-		// [ g_plane_y   g_dir_y ]                                          [ -g_plane_y  g_plane_x ]
+		// [ g_p.plane_x   g_p.dir_x ] -1                                       [ g_p.dir_y      -g_p.dir_x ]
+		// [               ]       =  1/(g_p.plane_x*g_p.dir_y-g_p.dir_x*g_p.plane_y) *   [                 ]
+		// [ g_p.plane_y   g_p.dir_y ]                                          [ -g_p.plane_y  g_p.plane_x ]
 
-		double invDet = 1.0 / (g_plane_x * g_dir_y - g_dir_x * g_plane_y); //required for correct matrix multiplication
+		double invDet = 1.0 / (g_p.plane_x * g_p.dir_y - g_p.dir_x * g_p.plane_y); //required for correct matrix multiplication
 
-		double transformX = invDet * (g_dir_y * spriteX - g_dir_x * spriteY);
-		double transformY = invDet * (-g_plane_y * spriteX + g_plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
+		double transformX = invDet * (g_p.dir_y * spriteX - g_p.dir_x * spriteY);
+		double transformY = invDet * (-g_p.plane_y * spriteX + g_p.plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
 
 		int spriteScreenX = (int)((w / 2) * (1 + transformX / transformY));
 
@@ -271,8 +268,8 @@ int		render(t_data *texture)
 			//1) it's in front of camera plane so you don't see things behind you
 			//2) it's on the screen (left)
 			//3) it's on the screen (right)
-			//4) ZBuffer, with perpendicular distance
-			if(transformY > 0 && stripe > 0 && stripe < w && transformY < ZBuffer[stripe])
+			//4) g_p.z_buffer, with perpendicular distance
+			if(transformY > 0 && stripe > 0 && stripe < w && transformY < g_p.z_buffer[stripe])
 				for(int y = drawStartY; y < drawEndY; y++) //for every pixel of the current stripe
 				{
 					int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
@@ -291,36 +288,6 @@ void	load_image(t_data *img, char *path)
 {
 	img->img = mlx_xpm_file_to_image(g_ptr.mlx, path, &img->w, &img->h);
 	img->addr = mlx_get_data_addr(img->img, &(img->bits_per_pixel), &(img->line_length), &(img->endian));
-}
-
-int main(void)
-{
-	g_pos_x = 22.0, g_pos_y = 11.5;  //x and y start position
-	g_dir_x = -1, g_dir_y = 0; //initial direction vector
-	g_plane_x = 0, g_plane_y = 0.66; //the 2d raycaster version of camera plane
-
-	g_ptr.mlx = mlx_init();
-	g_ptr.win = mlx_new_window(g_ptr.mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3d");
-	t_data	texture[11];
-	load_image(&(texture[0]), "pics/eagle.xpm");
-	load_image(&(texture[1]), "pics/redbrick.xpm");
-	load_image(&(texture[2]), "pics/purplestone.xpm");
-	load_image(&(texture[3]), "pics/greystone.xpm");
-	load_image(&(texture[4]), "pics/bluestone.xpm");
-	load_image(&(texture[5]), "pics/mossy.xpm");
-	load_image(&(texture[6]), "pics/wood.xpm");
-	load_image(&(texture[7]), "pics/colorstone.xpm");
-	load_image(&(texture[8]), "pics/barrel.xpm");
-	load_image(&(texture[9]), "pics/pillar.xpm");
-	load_image(&(texture[10]), "pics/greenlight.xpm");
-	//speed modifiers
-	g_move_speed = 0.2; //the constant value is in squares/second
-	g_rot_speed = 0.1; //the constant value is in radians/second
-	render(texture);
-	mlx_hook(g_ptr.win, 2, 1L<<0, key_press, 0);
-	//	mlx_do_sync(g_ptr.mlx);
-	mlx_loop_hook(g_ptr.mlx, render, texture);
-	mlx_loop(g_ptr.mlx);
 }
 
 //sort algorithm

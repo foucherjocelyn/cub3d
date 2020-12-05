@@ -1,4 +1,4 @@
-SRCS	= srcs/ray_casting.c
+SRCS	= srcs/ray_casting.c srcs/main.c srcs/init.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -6,7 +6,7 @@ NAME	= cub3d
 
 CC		= clang-9 
 
-CFLAGS	= -Wall -Werror -Wextra -g3 -fsanitize=address
+CFLAGS	= -Wall -Werror -Wextra -g3 -O0 -fsanitize=address
 
 RM		= rm -f
 
