@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/05 11:44:54 by jfoucher         ###   ########.fr       */
+/*   Updated: 2020/12/05 15:43:41 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,9 @@
 # include <stdlib.h>
 # include <math.h>
 
-# define NUM_SPRITES 19
-# define MAP_WIDTH 24
-# define MAP_HEIGHT 24
+# define NUM_SPRITES 8
 # define TEX_WIDTH 64
 # define TEX_HEIGHT 64
-# define SCREEN_WIDTH 1280
-# define SCREEN_HEIGHT 1024
 
 typedef struct	s_data {
 	void		*img;
@@ -76,7 +72,7 @@ typedef struct	s_scene {
 
 extern t_scene g_s;
 
-extern int				g_world_map[MAP_WIDTH][MAP_HEIGHT];
+extern int				g_world_map[24][24];
 
 typedef struct	s_sprite
 {

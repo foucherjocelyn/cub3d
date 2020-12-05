@@ -2,21 +2,6 @@
 
 t_sprite sprite[NUM_SPRITES] =
 {
-	{20.5, 11.5, 4}, //green light in front of playerstart
-	//green lights in every room
-	{18.5,4.5, 4},
-	{10.0,4.5, 4},
-	{10.0,12.5,4},
-	{3.5, 6.5, 4},
-	{3.5, 20.5,4},
-	{3.5, 14.5,4},
-	{14.5,20.5,4},
-
-	//row of pillars in front of wall: fisheye test
-	{18.5, 10.5, 4},
-	{18.5, 11.5, 4},
-	{18.5, 12.5, 4},
-
 	//some barrels around the map
 	{21.5, 1.5, 4},
 	{15.5, 1.5, 4},
@@ -45,7 +30,6 @@ void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 int	key_press(int keycode)
 {
-	printf("%d\n", keycode);
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
@@ -174,12 +158,13 @@ int		render(t_data *texture)
 			//Check if ray has hit a wall
 			if (g_world_map[mapX][mapY] == 1) hit = 1;
 		} 
-		printf("%d\n", side);
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
 		if (side < 2) perpWallDist = (mapX - g_p.pos_x + (1 - stepX) / 2) / rayDirX;
 		else           perpWallDist = (mapY - g_p.pos_y + (1 - stepY) / 2) / rayDirY;
 		//Calculate height of line to draw on screen
 		int lineHeight = (int)(h / perpWallDist);
+		if (perpWallDist < 0.000001)
+			lineHeight = 2147483647;
 
 		//calculate lowest and highest pixel to fill in current stripe
 		int drawStart = -lineHeight / 2 + h / 2;
