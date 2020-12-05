@@ -160,18 +160,23 @@ int		render(t_data *texture)
 				sideDistX += deltaDistX;
 				mapX += stepX;
 				side = 0;
+				if (mapX < (int)g_p.pos_x)
+					side = 1;
 			}
 			else
 			{
 				sideDistY += deltaDistY;
 				mapY += stepY;
-				side = 1;
+				side = 2;
+				if (mapY < (int)g_p.pos_y)
+					side = 3;
 			}
 			//Check if ray has hit a wall
 			if (g_world_map[mapX][mapY] == 1) hit = 1;
 		} 
+		printf("%d\n", side);
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-		if (side == 0) perpWallDist = (mapX - g_p.pos_x + (1 - stepX) / 2) / rayDirX;
+		if (side < 2) perpWallDist = (mapX - g_p.pos_x + (1 - stepX) / 2) / rayDirX;
 		else           perpWallDist = (mapY - g_p.pos_y + (1 - stepY) / 2) / rayDirY;
 		//Calculate height of line to draw on screen
 		int lineHeight = (int)(h / perpWallDist);
@@ -182,18 +187,17 @@ int		render(t_data *texture)
 		int drawEnd = lineHeight / 2 + h / 2;
 		if(drawEnd >= h)drawEnd = h - 1;
 		//texturing calculations
-		int texNum = g_world_map[mapX][mapY] - 1; //1 subtracted from it so that texture 0 can be used!
 
 		//calculate value of wallX
 		double wallX; //where exactly the wall was hit
-		if (side == 0) wallX = g_p.pos_y + perpWallDist * rayDirY;
+		if (side < 2) wallX = g_p.pos_y + perpWallDist * rayDirY;
 		else           wallX = g_p.pos_x + perpWallDist * rayDirX;
 		wallX -= floor((wallX));
 
 		//x coordinate on the texture
 		int texX = (int)(wallX * (double)TEX_WIDTH);
-		if(side == 0 && rayDirX > 0) texX = TEX_WIDTH - texX - 1;
-		if(side == 1 && rayDirY < 0) texX = TEX_WIDTH - texX - 1;
+		if(side < 2 && rayDirX > 0) texX = TEX_WIDTH - texX - 1;
+		if(side >= 2 && rayDirY < 0) texX = TEX_WIDTH - texX - 1;
 
 		// How much to increase the texture coordinate per screen pixel
 		double step = 1.0 * TEX_HEIGHT / lineHeight;
@@ -204,9 +208,9 @@ int		render(t_data *texture)
 			// Cast the texture coordinate to integer, and mask with (TEX_HEIGHT - 1) in case of overflow
 			int texY = (int)texPos & (TEX_HEIGHT - 1);
 			texPos += step;
-			unsigned int color = *(unsigned int*)(texture[texNum].addr + (texY * texture[texNum].line_length + texX * (texture[texNum].bits_per_pixel / 8)));
+			unsigned int color = *(unsigned int*)(texture[side].addr + (texY * texture[side].line_length + texX * (texture[side].bits_per_pixel / 8)));
 			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-			if(side == 1) color = (color >> 1) & 8355711;
+//			if(side == 1) color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&img, x, y, color);
 		}
 		for(int y = 0; y<drawStart; y++)

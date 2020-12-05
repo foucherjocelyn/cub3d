@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/05 12:34:03 by jfoucher         ###   ########.fr       */
+/*   Updated: 2020/12/05 15:30:45 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ void	init()
 {
 	g_s.r_width = 1280;
 	g_s.r_height = 1024;
-	g_s.north = "pics/bluestone.xpm";
+	g_s.north = "pics/redbrick.xpm";
 	g_s.south = "pics/eagle.xpm";
-	g_s.west = "pics/redbrick.xpm";
+	g_s.west = "pics/bluestone.xpm";
 	g_s.east = "pics/greystone.xpm";
 	g_s.sprite = "pics/barrel.xpm";
 	g_s.floor = 0xBBBBBB;
