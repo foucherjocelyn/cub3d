@@ -1,21 +1,8 @@
 #include "cub3d.h"
 
-t_sprite sprite[NUM_SPRITES] =
-{
-	//some barrels around the map
-	{21.5, 1.5, 4},
-	{15.5, 1.5, 4},
-	{16.0, 1.8, 4},
-	{16.2, 1.2, 4},
-	{3.5,  2.5, 4},
-	{9.5, 15.5, 4},
-	{10.0, 15.1,4},
-	{10.5, 15.8,4},
-};
-
 //arrays used to sort the sprites
-int spriteOrder[NUM_SPRITES];
-double spriteDistance[NUM_SPRITES];
+int *spriteOrder;
+double *spriteDistance;
 
 //function used to sort the sprites
 void sortSprites(int* order, double* dist, int amount);
@@ -33,26 +20,26 @@ int	key_press(int keycode)
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.dir_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x += g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] != 1) g_p.pos_y += g_p.dir_y * g_p.move_speed;
 	}
 	//move backwards if no wall behind you
 	if (keycode == 115)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] != 1) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
 	}
 	//move to the left if no wall behind you
 	if (keycode == 97)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] != 1) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
 	}
 	//move to the right if no wall behind you
 	if (keycode == 100)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.plane_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x += g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] != 1) g_p.pos_y += g_p.plane_y * g_p.move_speed;
 	}
 	//rotate to the right
 	if (keycode == 65363)
@@ -87,6 +74,8 @@ int		render(t_data *texture)
 	int h = g_s.r_height;
 	t_data img;
 
+	spriteOrder = malloc(sizeof(int) * g_s.nb_sprites);
+	spriteDistance = malloc(sizeof(double) * g_s.nb_sprites);
 	img.img = mlx_new_image(g_ptr.mlx, w, h);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	for(int x = 0; x < w; x++)
@@ -208,19 +197,19 @@ int		render(t_data *texture)
 
 	//SPRITE CASTING
 	//sort sprites from far to close
-	for(int i = 0; i < NUM_SPRITES; i++)
+	for(int i = 0; i < g_s.nb_sprites; i++)
 	{
 		spriteOrder[i] = i;
-		spriteDistance[i] = ((g_p.pos_x - sprite[i].x) * (g_p.pos_x - sprite[i].x) + (g_p.pos_y - sprite[i].y) * (g_p.pos_y - sprite[i].y)); //sqrt not taken, unneeded
+		spriteDistance[i] = ((g_p.pos_x - g_s.sprites[i].x) * (g_p.pos_x - g_s.sprites[i].x) + (g_p.pos_y - g_s.sprites[i].y) * (g_p.pos_y - g_s.sprites[i].y)); //sqrt not taken, unneeded
 	}
-	sortSprites(spriteOrder, spriteDistance, NUM_SPRITES);
+	sortSprites(spriteOrder, spriteDistance, g_s.nb_sprites);
 
 	//after sorting the sprites, do the projection and draw them
-	for(int i = 0; i < NUM_SPRITES; i++)
+	for(int i = 0; i < g_s.nb_sprites; i++)
 	{
 		//translate sprite position to relative to camera
-		double spriteX = sprite[spriteOrder[i]].x - g_p.pos_x;
-		double spriteY = sprite[spriteOrder[i]].y - g_p.pos_y;
+		double spriteX = g_s.sprites[spriteOrder[i]].x - g_p.pos_x;
+		double spriteY = g_s.sprites[spriteOrder[i]].y - g_p.pos_y;
 
 		//transform sprite with the inverse camera matrix
 		// [ g_p.plane_x   g_p.dir_x ] -1                                       [ g_p.dir_y      -g_p.dir_x ]
@@ -263,13 +252,15 @@ int		render(t_data *texture)
 				{
 					int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
 					int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
-					unsigned int color = *(unsigned int*)(texture[sprite[spriteOrder[i]].texture].addr + (texY * texture[sprite[spriteOrder[i]].texture].line_length + texX * (texture[sprite[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
+					unsigned int color = *(unsigned int*)(texture[g_s.sprites[spriteOrder[i]].texture].addr + (texY * texture[g_s.sprites[spriteOrder[i]].texture].line_length + texX * (texture[g_s.sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
 					if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&img, stripe, y, color);//paint pixel if it isn't black, black is the invisible color
 				}
 		}
 	}
 	mlx_put_image_to_window(g_ptr.mlx, g_ptr.win, img.img, 0, 0);
 	mlx_destroy_image(g_ptr.mlx, img.img);
+	free(spriteOrder);
+	free(spriteDistance);
 	return(0);
 }
 

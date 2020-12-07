@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/05 15:30:45 by jfoucher         ###   ########.fr       */
+/*   Updated: 2020/12/07 09:03:22 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,45 @@ void	init()
 	g_p.move_speed = 0.2;
 	g_p.rot_speed = 0.1;
 	g_p.z_buffer = malloc(sizeof(double) * g_s.r_width);
+	find_sprite();
+}
+
+void	find_sprite()
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 0;
+	g_s.nb_sprites = 0;
+	while (i < g_s.m_width)
+	{
+		j = 0;
+		while (j < g_s.m_height)
+		{
+			if (g_world_map[i][j] == 2)
+				g_s.nb_sprites++;
+			j++;
+		}
+		i++;
+	}
+	g_s.sprites = malloc(sizeof(t_sprite) * g_s.nb_sprites);
+	i = 0;
+	k = 0;
+	while (i < g_s.m_width)
+	{
+		j = 0;
+		while (j < g_s.m_height)
+		{
+			if (g_world_map[i][j] == 2)
+			{
+				g_s.sprites[k].x = i + 0.5;
+				g_s.sprites[k].y = j + 0.5;
+				g_s.sprites[k].texture = g_world_map[i][j] + 2;
+				k++;
+			}
+			j++;
+		}
+		i++;
+	}
 }

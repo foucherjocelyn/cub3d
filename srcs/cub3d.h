@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/05 15:43:41 by jfoucher         ###   ########.fr       */
+/*   Updated: 2020/12/07 08:51:00 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ typedef struct	s_ptr {
 	void *mlx;
 	void *win;
 }				t_ptr;
+
+typedef struct	s_sprite
+{
+	double	x;
+	double	y;
+	int		texture;
+}				t_sprite;
 
 int				render(t_data *texture);
 
@@ -67,6 +74,8 @@ typedef struct	s_scene {
 	int				ceiling;
 	int				m_width;
 	int				m_height;
+	int				nb_sprites;
+	t_sprite		*sprites;
 	char			**map;
 }				t_scene;
 
@@ -74,15 +83,9 @@ extern t_scene g_s;
 
 extern int				g_world_map[24][24];
 
-typedef struct	s_sprite
-{
-	double	x;
-	double	y;
-	int		texture;
-}				t_sprite;
-
 void    load_image(t_data *img, char *path);
 int		key_press(int keycode);
 void	init();
+void    find_sprite();
 
 #endif
