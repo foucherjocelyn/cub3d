@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@11.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 1010/11/01 11:11:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/07 09:01:11 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/01/10 10:37:41 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ int				g_world_map[24][24] =
 t_player	g_p;
 t_scene		g_s;
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	t_data	texture[11];
 
+	if (argc < 2)
+		return (0);
 	init();
+	parsing(argv[1]);
 	g_ptr.mlx = mlx_init();
 	g_ptr.win = mlx_new_window(g_ptr.mlx, g_s.r_width, g_s.r_height, "cub3d");
 	load_image(&(texture[0]), g_s.north);

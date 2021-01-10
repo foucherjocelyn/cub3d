@@ -1,5 +1,4 @@
-SRCS	= srcs/ray_casting.c srcs/main.c srcs/init.c
-
+SRCS	= srcs/ray_casting.c srcs/main.c srcs/init.c srcs/parsing.c srcs/ft_strcpy.c srcs/get_next_line/get_next_line.c srcs/get_next_line/get_next_line_utils.c
 OBJS	= $(SRCS:.c=.o)
 
 NAME	= cub3d

@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2020/12/07 08:51:00 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/01/10 12:48:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
+# include "get_next_line/get_next_line.h"
 
 # define NUM_SPRITES 8
 # define TEX_WIDTH 64
@@ -79,6 +80,11 @@ typedef struct	s_scene {
 	char			**map;
 }				t_scene;
 
+typedef struct	elem {
+	char			*identifier;
+	int				parsed;
+}
+
 extern t_scene g_s;
 
 extern int				g_world_map[24][24];
@@ -87,5 +93,7 @@ void    load_image(t_data *img, char *path);
 int		key_press(int keycode);
 void	init();
 void    find_sprite();
+char	*ft_strcpy(char *dest, char *src);
+void	parsing(char *file);
 
 #endif
