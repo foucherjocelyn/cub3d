@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@11.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 1010/11/01 11:11:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/01/10 10:37:41 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/01/30 15:43:30 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,25 @@ int				g_world_map[24][24] =
 };
 
 t_player	g_p;
-t_scene		g_s;
 
 int	main(int argc, char **argv)
 {
 	t_data	texture[11];
+	t_scene	*scene;
 
 	if (argc < 2)
 		return (0);
-	init();
+	scene = malloc(sizeof(t_scene));
+	init(scene);
 	parsing(argv[1]);
 	g_ptr.mlx = mlx_init();
-	g_ptr.win = mlx_new_window(g_ptr.mlx, g_s.r_width, g_s.r_height, "cub3d");
-	load_image(&(texture[0]), g_s.north);
-	load_image(&(texture[1]), g_s.south);
-	load_image(&(texture[2]), g_s.west);
-	load_image(&(texture[3]), g_s.east);
-	load_image(&(texture[4]), g_s.sprite);
-	render(texture);
+	g_ptr.win = mlx_new_window(g_ptr.mlx, scene->r_width, scene->r_height, "cub3d");
+	load_image(&(texture[0]), scene->north);
+	load_image(&(texture[1]), scene->south);
+	load_image(&(texture[2]), scene->west);
+	load_image(&(texture[3]), scene->east);
+	load_image(&(texture[4]), scene->sprite);
+	render(scene, texture);
 	mlx_hook(g_ptr.win, 2, 1L << 0, key_press, 0);
 	mlx_loop_hook(g_ptr.mlx, render, texture);
 	mlx_loop(g_ptr.mlx);

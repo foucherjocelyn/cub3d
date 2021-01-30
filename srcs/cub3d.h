@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/01/10 12:48:40 by user42           ###   ########.fr       */
+/*   Updated: 2021/01/30 15:44:17 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ typedef struct	s_sprite
 	int		texture;
 }				t_sprite;
 
-int				render(t_data *texture);
-
 t_ptr g_ptr;
 
 typedef struct	s_player {
@@ -80,19 +78,18 @@ typedef struct	s_scene {
 	char			**map;
 }				t_scene;
 
-typedef struct	elem {
+typedef struct	s_elem {
 	char			*identifier;
 	int				parsed;
-}
-
-extern t_scene g_s;
+}				t_elem;
 
 extern int				g_world_map[24][24];
 
+int		render(t_scene *scene, t_data *texture);
 void    load_image(t_data *img, char *path);
 int		key_press(int keycode);
-void	init();
-void    find_sprite();
+void	init(t_scene *scene);
+void    find_sprite(t_scene *scene);
 char	*ft_strcpy(char *dest, char *src);
 void	parsing(char *file);
 

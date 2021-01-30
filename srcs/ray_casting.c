@@ -68,14 +68,14 @@ int	key_press(int keycode)
 	return(0);
 }
 
-int		render(t_data *texture)
+int		render(t_scene *scene, t_data *texture)
 {
-	int w = g_s.r_width;
-	int h = g_s.r_height;
+	int w = scene->r_width;
+	int h = scene->r_height;
 	t_data img;
 
-	spriteOrder = malloc(sizeof(int) * g_s.nb_sprites);
-	spriteDistance = malloc(sizeof(double) * g_s.nb_sprites);
+	spriteOrder = malloc(sizeof(int) * scene->nb_sprites);
+	spriteDistance = malloc(sizeof(double) * scene->nb_sprites);
 	img.img = mlx_new_image(g_ptr.mlx, w, h);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	for(int x = 0; x < w; x++)
@@ -197,19 +197,19 @@ int		render(t_data *texture)
 
 	//SPRITE CASTING
 	//sort sprites from far to close
-	for(int i = 0; i < g_s.nb_sprites; i++)
+	for(int i = 0; i < scene->nb_sprites; i++)
 	{
 		spriteOrder[i] = i;
-		spriteDistance[i] = ((g_p.pos_x - g_s.sprites[i].x) * (g_p.pos_x - g_s.sprites[i].x) + (g_p.pos_y - g_s.sprites[i].y) * (g_p.pos_y - g_s.sprites[i].y)); //sqrt not taken, unneeded
+		spriteDistance[i] = ((g_p.pos_x - scene->sprites[i].x) * (g_p.pos_x - scene->sprites[i].x) + (g_p.pos_y - scene->sprites[i].y) * (g_p.pos_y - scene->sprites[i].y)); //sqrt not taken, unneeded
 	}
-	sortSprites(spriteOrder, spriteDistance, g_s.nb_sprites);
+	sortSprites(spriteOrder, spriteDistance, scene->nb_sprites);
 
 	//after sorting the sprites, do the projection and draw them
-	for(int i = 0; i < g_s.nb_sprites; i++)
+	for(int i = 0; i < scene->nb_sprites; i++)
 	{
 		//translate sprite position to relative to camera
-		double spriteX = g_s.sprites[spriteOrder[i]].x - g_p.pos_x;
-		double spriteY = g_s.sprites[spriteOrder[i]].y - g_p.pos_y;
+		double spriteX = scene->sprites[spriteOrder[i]].x - g_p.pos_x;
+		double spriteY = scene->sprites[spriteOrder[i]].y - g_p.pos_y;
 
 		//transform sprite with the inverse camera matrix
 		// [ g_p.plane_x   g_p.dir_x ] -1                                       [ g_p.dir_y      -g_p.dir_x ]
@@ -252,7 +252,7 @@ int		render(t_data *texture)
 				{
 					int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
 					int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
-					unsigned int color = *(unsigned int*)(texture[g_s.sprites[spriteOrder[i]].texture].addr + (texY * texture[g_s.sprites[spriteOrder[i]].texture].line_length + texX * (texture[g_s.sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
+					unsigned int color = *(unsigned int*)(texture[scene->sprites[spriteOrder[i]].texture].addr + (texY * texture[scene->sprites[spriteOrder[i]].texture].line_length + texX * (texture[scene->sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
 					if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&img, stripe, y, color);//paint pixel if it isn't black, black is the invisible color
 				}
 		}
