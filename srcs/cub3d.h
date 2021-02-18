@@ -76,6 +76,7 @@ typedef struct	s_scene {
 	int				nb_sprites;
 	t_sprite		*sprites;
 	char			**map;
+	t_data			*texture;
 }				t_scene;
 
 typedef struct	s_elem {
@@ -85,12 +86,18 @@ typedef struct	s_elem {
 
 extern int				g_world_map[24][24];
 
-int		render(t_scene *scene, t_data *texture);
+int		render(t_scene *scene);
 void    load_image(t_data *img, char *path);
 int		key_press(int keycode);
 void	init(t_scene *scene);
 void    find_sprite(t_scene *scene);
 char	*ft_strcpy(char *dest, char *src);
-void	parsing(char *file);
+void	parsing(char *file, t_scene *scene);
+void	p_texture(char *line, char **texture);
+void	parsing2(char *line, t_scene *scene);
+void	p_res(char *line, t_scene *scene);
+void	p_color(char *line, int *color);
+int		res_atoi(char *line);
+int		color_atoi(char *line, int *i);
 
 #endif

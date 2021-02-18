@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/01/30 15:44:43 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/18 17:13:39 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	init(t_scene *scene)
 	scene->west = "pics/bluestone.xpm";
 	scene->east = "pics/greystone.xpm";
 	scene->sprite = "pics/barrel.xpm";
-	scene->floor = 0xBBBBBB;
-	scene->ceiling = 0x0000FF;
+//	scene->floor = 0x00000;
+//	scene->ceiling = 0x0F00FF;
 	scene->m_width = 24;
 	scene->m_height = 24;
 	g_p.pos_x = 22.0;

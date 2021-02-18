@@ -20,26 +20,26 @@ int	key_press(int keycode)
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x += g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] != 1) g_p.pos_y += g_p.dir_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.dir_y * g_p.move_speed;
 	}
 	//move backwards if no wall behind you
 	if (keycode == 115)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] != 1) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
 	}
 	//move to the left if no wall behind you
 	if (keycode == 97)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] != 1) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
 	}
 	//move to the right if no wall behind you
 	if (keycode == 100)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] != 1) g_p.pos_x += g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] != 1) g_p.pos_y += g_p.plane_y * g_p.move_speed;
+		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.plane_x * g_p.move_speed;
+		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.plane_y * g_p.move_speed;
 	}
 	//rotate to the right
 	if (keycode == 65363)
@@ -68,7 +68,7 @@ int	key_press(int keycode)
 	return(0);
 }
 
-int		render(t_scene *scene, t_data *texture)
+int		render(t_scene *scene)
 {
 	int w = scene->r_width;
 	int h = scene->r_height;
@@ -182,15 +182,15 @@ int		render(t_scene *scene, t_data *texture)
 			// Cast the texture coordinate to integer, and mask with (TEX_HEIGHT - 1) in case of overflow
 			int texY = (int)texPos & (TEX_HEIGHT - 1);
 			texPos += step;
-			unsigned int color = *(unsigned int*)(texture[side].addr + (texY * texture[side].line_length + texX * (texture[side].bits_per_pixel / 8)));
+			unsigned int color = *(unsigned int*)(scene->texture[side].addr + (texY * scene->texture[side].line_length + texX * (scene->texture[side].bits_per_pixel / 8)));
 			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 //			if(side == 1) color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&img, x, y, color);
 		}
 		for(int y = 0; y<drawStart; y++)
-			my_mlx_pixel_put(&img, x, y, 0x0000FF);
+			my_mlx_pixel_put(&img, x, y, scene->ceiling);
 		for(int y = drawEnd; y<h; y++)
-			my_mlx_pixel_put(&img, x, y, 0xBBBBBB);
+			my_mlx_pixel_put(&img, x, y, scene->floor);
 		//SET THE ZBUFFER FOR THE SPRITE CASTING
 		g_p.z_buffer[x] = perpWallDist; //perpendicular distance is used
 	}
@@ -252,7 +252,7 @@ int		render(t_scene *scene, t_data *texture)
 				{
 					int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
 					int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
-					unsigned int color = *(unsigned int*)(texture[scene->sprites[spriteOrder[i]].texture].addr + (texY * texture[scene->sprites[spriteOrder[i]].texture].line_length + texX * (texture[scene->sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
+					unsigned int color = *(unsigned int*)(scene->texture[scene->sprites[spriteOrder[i]].texture].addr + (texY * scene->texture[scene->sprites[spriteOrder[i]].texture].line_length + texX * (scene->texture[scene->sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
 					if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&img, stripe, y, color);//paint pixel if it isn't black, black is the invisible color
 				}
 		}
