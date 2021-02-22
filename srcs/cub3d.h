@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/01/30 15:44:17 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/22 16:12:55 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,11 @@ typedef struct	s_scene {
 	char			*sprite;
 	int				floor;
 	int				ceiling;
-	int				m_width;
-	int				m_height;
 	int				nb_sprites;
 	t_sprite		*sprites;
 	char			**map;
 	t_data			*texture;
+	int				nb_map_lines;
 }				t_scene;
 
 typedef struct	s_elem {
@@ -84,11 +83,9 @@ typedef struct	s_elem {
 	int				parsed;
 }				t_elem;
 
-extern int				g_world_map[24][24];
-
 int		render(t_scene *scene);
 void    load_image(t_data *img, char *path);
-int		key_press(int keycode);
+int		key_press(int keycode, t_scene *scene);
 void	init(t_scene *scene);
 void    find_sprite(t_scene *scene);
 char	*ft_strcpy(char *dest, char *src);
@@ -99,5 +96,10 @@ void	p_res(char *line, t_scene *scene);
 void	p_color(char *line, int *color);
 int		res_atoi(char *line);
 int		color_atoi(char *line, int *i);
+void	count_map_lines(t_scene *scene, char *line);
+int		charinstr(char *str, char c);
+void	parse_map(char *file, t_scene *scene);
+void	find_player(t_scene *scene);
+void	find_dir(t_scene *scene, char player);
 
 #endif

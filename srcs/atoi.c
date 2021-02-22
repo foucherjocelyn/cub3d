@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/18 13:15:27 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/18 17:19:37 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/22 12:43:53 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	color_atoi(char *line, int *i)
 		result += line[*i] - '0';
 		(*i)++;
 	}
-	printf("result : %d\n", result);
 	return (result);
 }
 

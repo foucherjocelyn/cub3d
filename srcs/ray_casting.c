@@ -15,31 +15,31 @@ void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int	key_press(int keycode)
+int	key_press(int keycode, t_scene *scene)
 {
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.dir_y * g_p.move_speed;
+		if(scene->map[(int)(g_p.pos_x + g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == '0') g_p.pos_x += g_p.dir_x * g_p.move_speed;
+		if(scene->map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.dir_y * g_p.move_speed)] == '0') g_p.pos_y += g_p.dir_y * g_p.move_speed;
 	}
 	//move backwards if no wall behind you
 	if (keycode == 115)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.dir_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.dir_y * g_p.move_speed;
+		if(scene->map[(int)(g_p.pos_x - g_p.dir_x * g_p.move_speed)][(int)g_p.pos_y] == '0') g_p.pos_x -= g_p.dir_x * g_p.move_speed;
+		if(scene->map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.dir_y * g_p.move_speed)] == '0') g_p.pos_y -= g_p.dir_y * g_p.move_speed;
 	}
 	//move to the left if no wall behind you
 	if (keycode == 97)
 	{
-		if(g_world_map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x -= g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y -= g_p.plane_y * g_p.move_speed;
+		if(scene->map[(int)(g_p.pos_x - g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == '0') g_p.pos_x -= g_p.plane_x * g_p.move_speed;
+		if(scene->map[(int)g_p.pos_x][(int)(g_p.pos_y - g_p.plane_y * g_p.move_speed)] == '0') g_p.pos_y -= g_p.plane_y * g_p.move_speed;
 	}
 	//move to the right if no wall behind you
 	if (keycode == 100)
 	{
-		if(g_world_map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == 0) g_p.pos_x += g_p.plane_x * g_p.move_speed;
-		if(g_world_map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] == 0) g_p.pos_y += g_p.plane_y * g_p.move_speed;
+		if(scene->map[(int)(g_p.pos_x + g_p.plane_x * g_p.move_speed)][(int)g_p.pos_y] == '0') g_p.pos_x += g_p.plane_x * g_p.move_speed;
+		if(scene->map[(int)g_p.pos_x][(int)(g_p.pos_y + g_p.plane_y * g_p.move_speed)] == '0') g_p.pos_y += g_p.plane_y * g_p.move_speed;
 	}
 	//rotate to the right
 	if (keycode == 65363)
@@ -65,6 +65,7 @@ int	key_press(int keycode)
 	}
 	if (keycode == 65307)
 		exit(0);
+	printf("dir x : %f dir y : %f plane x %f plane y %f\n", g_p.dir_x, g_p.dir_y, g_p.plane_x, g_p.plane_y);
 	return(0);
 }
 
@@ -145,7 +146,7 @@ int		render(t_scene *scene)
 					side = 3;
 			}
 			//Check if ray has hit a wall
-			if (g_world_map[mapX][mapY] == 1) hit = 1;
+			if (scene->map[mapX][mapY] == '1') hit = 1;
 		} 
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
 		if (side < 2) perpWallDist = (mapX - g_p.pos_x + (1 - stepX) / 2) / rayDirX;

@@ -5,6 +5,7 @@ void	parsing(char *file, t_scene *scene)
 	char	*line;
 	int		fd;
 
+	scene->nb_map_lines = 0;
 	fd = open(file, O_RDONLY);
 	while (get_next_line(fd, &line) == 1)
 	{
@@ -13,6 +14,7 @@ void	parsing(char *file, t_scene *scene)
 	}
 	free(line);
 	close(fd);
+	parse_map(file, scene);
 }
 
 void	p_texture(char *line, char **texture)
@@ -48,13 +50,12 @@ void	p_color(char *line, int *color)
 	*color = (color_atoi(line, &i) << 16);
 	*color += (color_atoi(line, &i) << 8);
 	*color += color_atoi(line, &i);
-	printf("%X\n", *color);
 }
 void	parsing2(char *line, t_scene *scene)
 {
 	if (line[0] == 'R')
 		p_res(line, scene);
-	if (line[0] == 'N' && line[1] == 'O')
+	else if (line[0] == 'N' && line[1] == 'O')
 		p_texture(line, &scene->north);
 	else if (line[0] == 'S' && line[1] == 'O')
 		p_texture(line, &scene->south);
@@ -68,4 +69,6 @@ void	parsing2(char *line, t_scene *scene)
 		p_color(line, &scene->floor);
 	else if (line[0] == 'C')
 		p_color(line, &scene->ceiling);
+	else if (line[0] != '\0')
+		count_map_lines(scene, line);
 }

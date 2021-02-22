@@ -1,0 +1,16 @@
+R 800 600
+NO pics/redbrick.xpm
+SO pics/eagle.xpm
+WE pics/bluestone.xpm
+EA pics/purplestone.xpm
+
+S pics/barrel.xpm
+F 255,0,127
+C 0,255,255
+
+11111111111
+10000000001
+10000000001
+10000000001
+10000000001
+11111111111
