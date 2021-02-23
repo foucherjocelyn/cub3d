@@ -56,19 +56,19 @@ void	parsing2(char *line, t_scene *scene)
 	if (line[0] == 'R')
 		p_res(line, scene);
 	else if (line[0] == 'N' && line[1] == 'O')
-		p_texture(line, &scene->north);
+		p_texture(line, &(scene->north));
 	else if (line[0] == 'S' && line[1] == 'O')
-		p_texture(line, &scene->south);
+		p_texture(line, &(scene->south));
 	else if (line[0] == 'E' && line[1] == 'A')
-		p_texture(line, &scene->east);
+		p_texture(line, &(scene->east));
 	else if (line[0] == 'W' && line[1] == 'E')
-		p_texture(line, &scene->west);
+		p_texture(line, &(scene->west));
 	else if (line[0] == 'S')
-		p_texture(line, &scene->sprite);
+		p_texture(line, &(scene->sprite));
 	else if (line[0] == 'F')
-		p_color(line, &scene->floor);
+		p_color(line, &(scene->floor));
 	else if (line[0] == 'C')
-		p_color(line, &scene->ceiling);
+		p_color(line, &(scene->ceiling));
 	else if (line[0] != '\0')
 		count_map_lines(scene, line);
 }
