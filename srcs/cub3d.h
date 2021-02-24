@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/23 17:27:29 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/23 22:32:58 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <math.h>
 # include "get_next_line/get_next_line.h"
 
-# define NUM_SPRITES 8
 # define TEX_WIDTH 64
 # define TEX_HEIGHT 64
 
@@ -39,6 +38,23 @@ typedef struct	s_sprite
 	double	y;
 	int		texture;
 }				t_sprite;
+
+typedef struct	s_var_raycasting {
+	double	camera_x;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	int		map_x;
+	int		map_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	delta_dist_x;
+	double	delta_dist_y;
+	double	perp_wall_dist;
+	int		step_x;
+	int		step_y;
+	int		hit;
+	int		side;
+}				t_var_raycasting;
 
 typedef struct	s_player {
 	double			dir_x;
@@ -67,6 +83,8 @@ typedef struct	s_scene {
 	int				ceiling;
 	int				nb_sprites;
 	t_sprite		*sprites;
+	int				*sprite_order;
+	double			*sprite_distance;
 	char			**map;
 	t_data			*texture;
 	int				nb_map_lines;
@@ -78,10 +96,10 @@ typedef struct	s_elem {
 }				t_elem;
 
 int		render(t_scene *scene);
-void    load_image(t_scene *scene, t_data *img, char *path);
+void	load_image(t_scene *scene, t_data *img, char *path);
 int		key_press(int keycode, t_scene *scene);
 void	init(t_scene *scene);
-void    find_sprite(t_scene *scene);
+void	find_sprite(t_scene *scene);
 char	*ft_strcpy(char *dest, char *src);
 void	parsing(char *file, t_scene *scene);
 void	p_texture(char *line, char **texture);
@@ -95,5 +113,6 @@ int		charinstr(char *str, char c);
 void	parse_map(char *file, t_scene *scene);
 void	find_player(t_scene *scene);
 void	find_dir(t_scene *scene, char player);
+void	sortSprites(int *order, double *dist, int amount);
 
 #endif

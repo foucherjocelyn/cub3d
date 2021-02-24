@@ -1,11 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ray_casting.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/23 19:11:12 by jfoucher          #+#    #+#             */
+/*   Updated: 2021/02/24 14:11:53 by jfoucher         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
-
-//arrays used to sort the sprites
-int *spriteOrder;
-double *spriteDistance;
-
-//function used to sort the sprites
-void sortSprites(int* order, double* dist, int amount);
 
 void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -20,48 +25,48 @@ int	key_press(int keycode, t_scene *scene)
 	//move forward if no wall in front of you
 	if (keycode == 119)
 	{
-		if(scene->map[(int)(scene->player.pos_x + scene->player.dir_x * scene->player.move_speed)][(int)scene->player.pos_y] == '0') scene->player.pos_x += scene->player.dir_x * scene->player.move_speed;
-		if(scene->map[(int)scene->player.pos_x][(int)(scene->player.pos_y + scene->player.dir_y * scene->player.move_speed)] == '0') scene->player.pos_y += scene->player.dir_y * scene->player.move_speed;
+		if(scene->map[(int)(scene->player.pos_y + scene->player.dir_y * scene->player.move_speed)][(int)scene->player.pos_x] != '1') scene->player.pos_y += scene->player.dir_y * scene->player.move_speed;
+		if(scene->map[(int)scene->player.pos_y][(int)(scene->player.pos_x + scene->player.dir_x * scene->player.move_speed)] != '1') scene->player.pos_x += scene->player.dir_x * scene->player.move_speed;
 	}
 	//move backwards if no wall behind you
 	if (keycode == 115)
 	{
-		if(scene->map[(int)(scene->player.pos_x - scene->player.dir_x * scene->player.move_speed)][(int)scene->player.pos_y] == '0') scene->player.pos_x -= scene->player.dir_x * scene->player.move_speed;
-		if(scene->map[(int)scene->player.pos_x][(int)(scene->player.pos_y - scene->player.dir_y * scene->player.move_speed)] == '0') scene->player.pos_y -= scene->player.dir_y * scene->player.move_speed;
+		if(scene->map[(int)(scene->player.pos_y - scene->player.dir_y * scene->player.move_speed)][(int)scene->player.pos_x] != '1') scene->player.pos_y -= scene->player.dir_y * scene->player.move_speed;
+		if(scene->map[(int)scene->player.pos_y][(int)(scene->player.pos_x - scene->player.dir_x * scene->player.move_speed)] != '1') scene->player.pos_x -= scene->player.dir_x * scene->player.move_speed;
 	}
 	//move to the left if no wall behind you
 	if (keycode == 97)
 	{
-		if(scene->map[(int)(scene->player.pos_x - scene->player.plane_x * scene->player.move_speed)][(int)scene->player.pos_y] == '0') scene->player.pos_x -= scene->player.plane_x * scene->player.move_speed;
-		if(scene->map[(int)scene->player.pos_x][(int)(scene->player.pos_y - scene->player.plane_y * scene->player.move_speed)] == '0') scene->player.pos_y -= scene->player.plane_y * scene->player.move_speed;
+		if(scene->map[(int)(scene->player.pos_y - scene->player.plane_y * scene->player.move_speed)][(int)scene->player.pos_x] != '1') scene->player.pos_y -= scene->player.plane_y * scene->player.move_speed;
+		if(scene->map[(int)scene->player.pos_y][(int)(scene->player.pos_x - scene->player.plane_x * scene->player.move_speed)] != '1') scene->player.pos_x -= scene->player.plane_x * scene->player.move_speed;
 	}
 	//move to the right if no wall behind you
 	if (keycode == 100)
 	{
-		if(scene->map[(int)(scene->player.pos_x + scene->player.plane_x * scene->player.move_speed)][(int)scene->player.pos_y] == '0') scene->player.pos_x += scene->player.plane_x * scene->player.move_speed;
-		if(scene->map[(int)scene->player.pos_x][(int)(scene->player.pos_y + scene->player.plane_y * scene->player.move_speed)] == '0') scene->player.pos_y += scene->player.plane_y * scene->player.move_speed;
+		if(scene->map[(int)(scene->player.pos_y + scene->player.plane_y * scene->player.move_speed)][(int)scene->player.pos_x] != '1') scene->player.pos_y += scene->player.plane_y * scene->player.move_speed;
+		if(scene->map[(int)scene->player.pos_y][(int)(scene->player.pos_x + scene->player.plane_x * scene->player.move_speed)] != '1') scene->player.pos_x += scene->player.plane_x * scene->player.move_speed;
 	}
 	//rotate to the right
 	if (keycode == 65363)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = scene->player.dir_x;
-		scene->player.dir_x = scene->player.dir_x * cos(-scene->player.rot_speed) - scene->player.dir_y * sin(-scene->player.rot_speed);
-		scene->player.dir_y = oldDirX * sin(-scene->player.rot_speed) + scene->player.dir_y * cos(-scene->player.rot_speed);
-		double oldPlaneX = scene->player.plane_x;
-		scene->player.plane_x = scene->player.plane_x * cos(-scene->player.rot_speed) - scene->player.plane_y * sin(-scene->player.rot_speed);
-		scene->player.plane_y = oldPlaneX * sin(-scene->player.rot_speed) + scene->player.plane_y * cos(-scene->player.rot_speed);
+		double oldDirX = scene->player.dir_y;
+		scene->player.dir_y = scene->player.dir_y * cos(-scene->player.rot_speed) - scene->player.dir_x * sin(-scene->player.rot_speed);
+		scene->player.dir_x = oldDirX * sin(-scene->player.rot_speed) + scene->player.dir_x * cos(-scene->player.rot_speed);
+		double oldPlaneX = scene->player.plane_y;
+		scene->player.plane_y = scene->player.plane_y * cos(-scene->player.rot_speed) - scene->player.plane_x * sin(-scene->player.rot_speed);
+		scene->player.plane_x = oldPlaneX * sin(-scene->player.rot_speed) + scene->player.plane_x * cos(-scene->player.rot_speed);
 	}
 	//rotate to the left
 	if (keycode == 65361)
 	{
 		//both camera direction and camera plane must be rotated
-		double oldDirX = scene->player.dir_x;
-		scene->player.dir_x = scene->player.dir_x * cos(scene->player.rot_speed) - scene->player.dir_y * sin(scene->player.rot_speed);
-		scene->player.dir_y = oldDirX * sin(scene->player.rot_speed) + scene->player.dir_y * cos(scene->player.rot_speed);
-		double oldPlaneX = scene->player.plane_x;
-		scene->player.plane_x = scene->player.plane_x * cos(scene->player.rot_speed) - scene->player.plane_y * sin(scene->player.rot_speed);
-		scene->player.plane_y = oldPlaneX * sin(scene->player.rot_speed) + scene->player.plane_y * cos(scene->player.rot_speed);
+		double oldDirX = scene->player.dir_y;
+		scene->player.dir_y = scene->player.dir_y * cos(scene->player.rot_speed) - scene->player.dir_x * sin(scene->player.rot_speed);
+		scene->player.dir_x = oldDirX * sin(scene->player.rot_speed) + scene->player.dir_x * cos(scene->player.rot_speed);
+		double oldPlaneX = scene->player.plane_y;
+		scene->player.plane_y = scene->player.plane_y * cos(scene->player.rot_speed) - scene->player.plane_x * sin(scene->player.rot_speed);
+		scene->player.plane_x = oldPlaneX * sin(scene->player.rot_speed) + scene->player.plane_x * cos(scene->player.rot_speed);
 	}
 	if (keycode == 65307)
 		exit(0);
@@ -70,89 +75,80 @@ int	key_press(int keycode, t_scene *scene)
 
 int		render(t_scene *scene)
 {
-	int w = scene->r_width;
-	int h = scene->r_height;
-	t_data img;
+	int 				w = scene->r_width;
+	int 				h = scene->r_height;
+	t_data 				img;
+	t_var_raycasting	var;
 
-	spriteOrder = malloc(sizeof(int) * scene->nb_sprites);
-	spriteDistance = malloc(sizeof(double) * scene->nb_sprites);
+	scene->sprite_order = malloc(sizeof(int) * scene->nb_sprites);
+	scene->sprite_distance = malloc(sizeof(double) * scene->nb_sprites);
 	img.img = mlx_new_image(scene->mlx_ptr, w, h);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	for(int x = 0; x < w; x++)
 	{
 		//calculate ray position and direction
-		double cameraX = 2 * x / (double)w - 1; //x-coordinate in camera space
-		double rayDirX = scene->player.dir_x + scene->player.plane_x * cameraX;
-		double rayDirY = scene->player.dir_y + scene->player.plane_y * cameraX;
+		var.camera_x = 2 * x / (double)w - 1; //x-coordinate in camera space
+		var.ray_dir_x = scene->player.dir_x + scene->player.plane_x * var.camera_x;
+		var.ray_dir_y = scene->player.dir_y + scene->player.plane_y * var.camera_x;
 		//which box of the map we're in
-		int mapX = (int)scene->player.pos_x;
-		int mapY = (int)scene->player.pos_y;
-
-		//length of ray from current position to next x or y-side
-		double sideDistX;
-		double sideDistY;
+		var.map_x = (int)scene->player.pos_x;
+		var.map_y = (int)scene->player.pos_y;
 
 		//length of ray from one x or y-side to next x or y-side
-		double deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : fabs(1 / rayDirX));
-		double deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
-		double perpWallDist;
-
-		//what direction to step in x or y-direction (either +1 or -1)
-		int stepX;
-		int stepY;
-
-		int hit = 0; //was there a wall hit?
-		int side; //was a NS or a EW wall hit?
+		var.delta_dist_x = (var.ray_dir_y == 0) ? 0 : ((var.ray_dir_x == 0) ? 1 : fabs(1 / var.ray_dir_x));
+		var.delta_dist_y = (var.ray_dir_x == 0) ? 0 : ((var.ray_dir_y == 0) ? 1 : fabs(1 / var.ray_dir_y));
+		
+		var.hit = 0;
 		//calculate step and initial sideDist
-		if (rayDirX < 0)
+		if (var.ray_dir_y < 0)
 		{
-			stepX = -1;
-			sideDistX = (scene->player.pos_x - mapX) * deltaDistX;
+			var.step_y = -1;
+			var.side_dist_y = (scene->player.pos_y - var.map_y) * var.delta_dist_y;
 		}
 		else
 		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - scene->player.pos_x) * deltaDistX;
+			var.step_y = 1;
+			var.side_dist_y = (var.map_y + 1.0 - scene->player.pos_y) * var.delta_dist_y;
 		}
-		if (rayDirY < 0)
+		if (var.ray_dir_x < 0)
 		{
-			stepY = -1;
-			sideDistY = (scene->player.pos_y - mapY) * deltaDistY;
+			var.step_x = -1;
+			var.side_dist_x = (scene->player.pos_x - var.map_x) * var.delta_dist_x;
 		}
 		else
 		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - scene->player.pos_y) * deltaDistY;
+			var.step_x = 1;
+			var.side_dist_x = (var.map_x + 1.0 - scene->player.pos_x) * var.delta_dist_x;
 		}
 		//perform DDA
-		while (hit == 0)
+		while (var.hit == 0)
 		{
 			//jump to next map square, OR in x-direction, OR in y-direction
-			if (sideDistX < sideDistY)
+			if (var.side_dist_y < var.side_dist_x)
 			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
-				if (mapX < (int)scene->player.pos_x)
-					side = 1;
+				var.side_dist_y += var.delta_dist_y;
+				var.map_y += var.step_y;
+				var.side = 0;
+				if (var.map_y < (int)scene->player.pos_y)
+					var.side = 1;
 			}
 			else
 			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 2;
-				if (mapY < (int)scene->player.pos_y)
-					side = 3;
+				var.side_dist_x += var.delta_dist_x;
+				var.map_x += var.step_x;
+				var.side = 2;
+				if (var.map_x < (int)scene->player.pos_x)
+					var.side = 3;
 			}
 			//Check if ray has hit a wall
-			if (scene->map[mapX][mapY] == '1') hit = 1;
+			if (scene->map[var.map_y][var.map_x] == '1') var.hit = 1;
 		} 
 		//Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-		if (side < 2) perpWallDist = (mapX - scene->player.pos_x + (1 - stepX) / 2) / rayDirX;
-		else           perpWallDist = (mapY - scene->player.pos_y + (1 - stepY) / 2) / rayDirY;
+		if (var.side < 2) var.perp_wall_dist = (var.map_y - scene->player.pos_y + (1 - var.step_y) / 2) / var.ray_dir_y;
+		else           var.perp_wall_dist = (var.map_x - scene->player.pos_x + (1 - var.step_x) / 2) / var.ray_dir_x;
 		//Calculate height of line to draw on screen
-		int lineHeight = (int)(h / perpWallDist);
-		if (perpWallDist < 0.000001)
+		int lineHeight = (int)(h / var.perp_wall_dist);
+		if (var.perp_wall_dist < 0.000001)
 			lineHeight = 2147483647;
 
 		//calculate lowest and highest pixel to fill in current stripe
@@ -164,14 +160,14 @@ int		render(t_scene *scene)
 
 		//calculate value of wallX
 		double wallX; //where exactly the wall was hit
-		if (side < 2) wallX = scene->player.pos_y + perpWallDist * rayDirY;
-		else           wallX = scene->player.pos_x + perpWallDist * rayDirX;
+		if (var.side < 2) wallX = scene->player.pos_x + var.perp_wall_dist * var.ray_dir_x;
+		else           wallX = scene->player.pos_y + var.perp_wall_dist * var.ray_dir_y;
 		wallX -= floor((wallX));
 
 		//x coordinate on the texture
 		int texX = (int)(wallX * (double)TEX_WIDTH);
-		if(side < 2 && rayDirX > 0) texX = TEX_WIDTH - texX - 1;
-		if(side >= 2 && rayDirY < 0) texX = TEX_WIDTH - texX - 1;
+		if(var.side < 2 && var.ray_dir_y > 0) texX = TEX_WIDTH - texX - 1;
+		if(var.side >= 2 && var.ray_dir_x < 0) texX = TEX_WIDTH - texX - 1;
 
 		// How much to increase the texture coordinate per screen pixel
 		double step = 1.0 * TEX_HEIGHT / lineHeight;
@@ -182,7 +178,7 @@ int		render(t_scene *scene)
 			// Cast the texture coordinate to integer, and mask with (TEX_HEIGHT - 1) in case of overflow
 			int texY = (int)texPos & (TEX_HEIGHT - 1);
 			texPos += step;
-			unsigned int color = *(unsigned int*)(scene->texture[side].addr + (texY * scene->texture[side].line_length + texX * (scene->texture[side].bits_per_pixel / 8)));
+			unsigned int color = *(unsigned int*)(scene->texture[var.side].addr + (texY * scene->texture[var.side].line_length + texX * (scene->texture[var.side].bits_per_pixel / 8)));
 			//make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
 //			if(side == 1) color = (color >> 1) & 8355711;
 			my_mlx_pixel_put(&img, x, y, color);
@@ -192,34 +188,34 @@ int		render(t_scene *scene)
 		for(int y = drawEnd; y<h; y++)
 			my_mlx_pixel_put(&img, x, y, scene->floor);
 		//SET THE ZBUFFER FOR THE SPRITE CASTING
-		scene->player.z_buffer[x] = perpWallDist; //perpendicular distance is used
+		scene->player.z_buffer[x] = var.perp_wall_dist; //perpendicular distance is used
 	}
 
 	//SPRITE CASTING
 	//sort sprites from far to close
 	for(int i = 0; i < scene->nb_sprites; i++)
 	{
-		spriteOrder[i] = i;
-		spriteDistance[i] = ((scene->player.pos_x - scene->sprites[i].x) * (scene->player.pos_x - scene->sprites[i].x) + (scene->player.pos_y - scene->sprites[i].y) * (scene->player.pos_y - scene->sprites[i].y)); //sqrt not taken, unneeded
+		scene->sprite_order[i] = i;
+		scene->sprite_distance[i] = ((scene->player.pos_y - scene->sprites[i].x) * (scene->player.pos_y - scene->sprites[i].x) + (scene->player.pos_x - scene->sprites[i].y) * (scene->player.pos_x - scene->sprites[i].y)); //sqrt not taken, unneeded
 	}
-	sortSprites(spriteOrder, spriteDistance, scene->nb_sprites);
+	sortSprites(scene->sprite_order, scene->sprite_distance, scene->nb_sprites);
 
 	//after sorting the sprites, do the projection and draw them
 	for(int i = 0; i < scene->nb_sprites; i++)
 	{
 		//translate sprite position to relative to camera
-		double spriteX = scene->sprites[spriteOrder[i]].x - scene->player.pos_x;
-		double spriteY = scene->sprites[spriteOrder[i]].y - scene->player.pos_y;
+		double spriteX = scene->sprites[scene->sprite_order[i]].x - scene->player.pos_y;
+		double spriteY = scene->sprites[scene->sprite_order[i]].y - scene->player.pos_x;
 
 		//transform sprite with the inverse camera matrix
-		// [ scene->player.plane_x   scene->player.dir_x ] -1                                       [ scene->player.dir_y      -scene->player.dir_x ]
-		// [               ]       =  1/(scene->player.plane_x*scene->player.dir_y-scene->player.dir_x*scene->player.plane_y) *   [                 ]
-		// [ scene->player.plane_y   scene->player.dir_y ]                                          [ -scene->player.plane_y  scene->player.plane_x ]
+		// [ scene->player.plane_y   scene->player.dir_y ] -1                                       [ scene->player.dir_x      -scene->player.dir_y ]
+		// [               ]       =  1/(scene->player.plane_y*scene->player.dir_x-scene->player.dir_y*scene->player.plane_x) *   [                 ]
+		// [ scene->player.plane_x   scene->player.dir_x ]                                          [ -scene->player.plane_x  scene->player.plane_y ]
 
-		double invDet = 1.0 / (scene->player.plane_x * scene->player.dir_y - scene->player.dir_x * scene->player.plane_y); //required for correct matrix multiplication
+		double invDet = 1.0 / (scene->player.plane_y * scene->player.dir_x - scene->player.dir_y * scene->player.plane_x); //required for correct matrix multiplication
 
-		double transformX = invDet * (scene->player.dir_y * spriteX - scene->player.dir_x * spriteY);
-		double transformY = invDet * (-scene->player.plane_y * spriteX + scene->player.plane_x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
+		double transformX = invDet * (scene->player.dir_x * spriteX - scene->player.dir_y * spriteY);
+		double transformY = invDet * (-scene->player.plane_x * spriteX + scene->player.plane_y * spriteY); //this is actually the depth inside the screen, that what Z is in 3D
 
 		int spriteScreenX = (int)((w / 2) * (1 + transformX / transformY));
 
@@ -252,15 +248,15 @@ int		render(t_scene *scene)
 				{
 					int d = (y) * 256 - h * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
 					int texY = ((d * TEX_HEIGHT) / spriteHeight) / 256;
-					unsigned int color = *(unsigned int*)(scene->texture[scene->sprites[spriteOrder[i]].texture].addr + (texY * scene->texture[scene->sprites[spriteOrder[i]].texture].line_length + texX * (scene->texture[scene->sprites[spriteOrder[i]].texture].bits_per_pixel / 8))); //get current color from the texture
+					unsigned int color = *(unsigned int*)(scene->texture[scene->sprites[scene->sprite_order[i]].texture].addr + (texY * scene->texture[scene->sprites[scene->sprite_order[i]].texture].line_length + texX * (scene->texture[scene->sprites[scene->sprite_order[i]].texture].bits_per_pixel / 8))); //get current color from the texture
 					if((color & 0x00FFFFFF) != 0) my_mlx_pixel_put(&img, stripe, y, color);//paint pixel if it isn't black, black is the invisible color
 				}
 		}
 	}
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, img.img, 0, 0);
 	mlx_destroy_image(scene->mlx_ptr, img.img);
-	free(spriteOrder);
-	free(spriteDistance);
+	free(scene->sprite_order);
+	free(scene->sprite_distance);
 	return(0);
 }
 

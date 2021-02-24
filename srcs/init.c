@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/23 17:30:00 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/24 11:44:41 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,31 @@ void	find_dir(t_scene *scene, char player)
 	(void)scene;
 	if (player == 'N')
 	{
-		scene->player.dir_x = -1;
-		scene->player.dir_y = 0;
-		scene->player.plane_x = 0;
-		scene->player.plane_y = 0.66;
+		scene->player.dir_x = 0;
+		scene->player.dir_y = -1;
+		scene->player.plane_x = 0.66;
+		scene->player.plane_y = 0;
 	}
 	else if (player == 'S')
+	{
+		scene->player.dir_x = 0;
+		scene->player.dir_y = 1;
+		scene->player.plane_x = -0.66;
+		scene->player.plane_y = 0;
+	}
+	else if (player == 'E')
 	{
 		scene->player.dir_x = 1;
 		scene->player.dir_y = 0;
 		scene->player.plane_x = 0;
-		scene->player.plane_y = -0.66;
-	}
-	else if (player == 'E')
-	{
-		scene->player.dir_x = 0;
-		scene->player.dir_y = 1;
-		scene->player.plane_x = 0.66;
-		scene->player.plane_y = 0;
+		scene->player.plane_y = 0.66;
 	}
 	else if (player == 'W')
 	{
-		scene->player.dir_x = 0;
-		scene->player.dir_y = -1;
-		scene->player.plane_x = -0.66;
-		scene->player.plane_y = 0;
+		scene->player.dir_x = -1;
+		scene->player.dir_y = 0;
+		scene->player.plane_x = 0;
+		scene->player.plane_y = -0.66;
 	}
 }
 
@@ -67,8 +67,8 @@ void	find_player(t_scene *scene)
 		{
 			if (charinstr("NSEW", scene->map[i][j]))
 			{
-				scene->player.pos_x = i + 0.5;
-				scene->player.pos_y = j + 0.5;
+				scene->player.pos_x = j + 0.5;
+				scene->player.pos_y = i + 0.5;
 				find_dir(scene, scene->map[i][j]);
 				scene->map[i][j] = '0';
 			}
