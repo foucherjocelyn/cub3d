@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/25 17:36:27 by jfoucher          #+#    #+#             */
+/*   Updated: 2021/02/25 17:40:07 by jfoucher         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	parsing(char *file, t_scene *scene)
@@ -51,6 +63,7 @@ void	p_color(char *line, int *color)
 	*color += (color_atoi(line, &i) << 8);
 	*color += color_atoi(line, &i);
 }
+
 void	parsing2(char *line, t_scene *scene)
 {
 	if (line[0] == 'R')

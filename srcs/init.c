@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/24 11:44:41 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/25 17:33:45 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,25 @@ void	init(t_scene *scene)
 
 void	find_dir(t_scene *scene, char player)
 {
-	(void)scene;
-	if (player == 'N')
-	{
-		scene->player.dir_x = 0;
-		scene->player.dir_y = -1;
-		scene->player.plane_x = 0.66;
-		scene->player.plane_y = 0;
-	}
-	else if (player == 'S')
+	scene->player.dir_x = 0;
+	scene->player.dir_y = -1;
+	scene->player.plane_x = 0.66;
+	scene->player.plane_y = 0;
+	if (player == 'S')
 	{
 		scene->player.dir_x = 0;
 		scene->player.dir_y = 1;
 		scene->player.plane_x = -0.66;
 		scene->player.plane_y = 0;
 	}
-	else if (player == 'E')
+	if (player == 'E')
 	{
 		scene->player.dir_x = 1;
 		scene->player.dir_y = 0;
 		scene->player.plane_x = 0;
 		scene->player.plane_y = 0.66;
 	}
-	else if (player == 'W')
+	if (player == 'W')
 	{
 		scene->player.dir_x = -1;
 		scene->player.dir_y = 0;
@@ -78,11 +74,10 @@ void	find_player(t_scene *scene)
 	}
 }
 
-void	find_sprite(t_scene *scene)
+void	count_sprite(t_scene *scene)
 {
 	int	i;
-	int	j;
-	int	k;
+	int j;
 
 	i = 0;
 	scene->nb_sprites = 0;
@@ -97,6 +92,15 @@ void	find_sprite(t_scene *scene)
 		}
 		i++;
 	}
+}
+
+void	find_sprite(t_scene *scene)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	count_sprite(scene);
 	scene->sprites = malloc(sizeof(t_sprite) * scene->nb_sprites);
 	i = 0;
 	k = 0;
