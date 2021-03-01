@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 19:11:12 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/25 21:04:51 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/28 00:52:30 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,19 @@ int		render(t_scene *scene)
 	int			x;
 
 	x = 0;
-	scene->sprite_order = malloc(sizeof(int) * scene->nb_sprites);
-	scene->sprite_distance = malloc(sizeof(double) * scene->nb_sprites);
 	img.img = mlx_new_image(scene->mlx_ptr, scene->r_width, scene->r_height);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
 	&img.line_length, &img.endian);
 	while (x < scene->r_width)
 	{
-		ray_casting(scene, &var, x);
-		draw_wall(scene, &var, &img, x);
+		init_ray_casting(scene, &var, x);
+		ray_casting(scene, &var);
+		draw_line(scene, &var, &img, x);
 		x++;
 	}
 	sprite_casting(scene, &img);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, img.img, 0, 0);
 	mlx_destroy_image(scene->mlx_ptr, img.img);
-	free(scene->sprite_order);
-	free(scene->sprite_distance);
 	return (0);
 }
 

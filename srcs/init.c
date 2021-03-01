@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/25 17:33:45 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/02/28 01:34:24 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,8 @@ void	find_sprite(t_scene *scene)
 		{
 			if (scene->map[i][j] == '2')
 			{
-				scene->sprites[k].x = i + 0.5;
-				scene->sprites[k].y = j + 0.5;
-				scene->sprites[k].texture = 4;
+				scene->sprites[k].y = i + 0.5;
+				scene->sprites[k].x = j + 0.5;
 				k++;
 			}
 			j++;

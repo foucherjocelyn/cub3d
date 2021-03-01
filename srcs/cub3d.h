@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/25 22:15:36 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/01 18:32:16 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct	s_sprite
 {
 	double	x;
 	double	y;
-	int		texture;
+	double	distance;
 }				t_sprite;
 
 typedef struct	s_ray_var {
@@ -61,7 +61,32 @@ typedef struct	s_ray_var {
 	int		step_y;
 	int		hit;
 	int		side;
+	int		line_height;
+	double	wall_x;
+	int		tex_x;
+	int		tex_y;
+	double	step;
+	double	tex_pos;
+	int		draw_start;
+	int		draw_end;
 }				t_ray_var;
+
+typedef	struct	s_sprite_var
+{
+	int		sprite_height;
+	int		sprite_width;
+	int		sprite_screen_x;
+	int		draw_start_x;
+	int		draw_start_y;
+	int		draw_end_x;
+	int		draw_end_y;
+	double	transform_x;
+	double	transform_y;
+	int		tex_x;
+	int		tex_y;
+	int		stripe;
+	int		y;
+}				t_sprite_var;
 
 typedef struct	s_player {
 	double	dir_x;
@@ -90,8 +115,6 @@ typedef struct	s_scene {
 	int			ceiling;
 	int			nb_sprites;
 	t_sprite	*sprites;
-	int			*sprite_order;
-	double		*sprite_distance;
 	char		**map;
 	t_data		*texture;
 	int			nb_map_lines;
@@ -120,10 +143,10 @@ int				charinstr(char *str, char c);
 void			parse_map(char *file, t_scene *scene);
 void			find_player(t_scene *scene);
 void			find_dir(t_scene *scene, char player);
-void			sort_sprites(int *order, double *dist, int amount);
-void			ray_casting(t_scene *scene, t_ray_var *var, int x);
+void			sort_sprites(t_scene *scene);
+void			ray_casting(t_scene *scene, t_ray_var *var);
 void			perform_dda(t_scene *scene, t_ray_var *var);
-void			draw_wall(t_scene *scene, t_ray_var *var, t_data *img, int x);
+void			draw_line(t_scene *scene, t_ray_var *var, t_data *img, int x);
 void			sprite_casting(t_scene *scene, t_data *img);
 void			count_sprite(t_scene *scene);
 void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
@@ -131,5 +154,11 @@ void			rotate_left(t_player *p);
 void			rotate_left(t_player *p);
 void			move_forward_backward(t_scene *scene, t_player *p, char dir);
 void			move_sideways(t_scene *scene, t_player *p, char dir);
+void			init_ray_casting(t_scene *scene, t_ray_var *var, int x);
+void			init_draw_line(t_scene *scene, t_ray_var *var);
+void			init_draw_line2(t_scene *scene, t_ray_var *var);
+void			draw_sprite(t_scene *scene, t_data *img, t_sprite_var *var);
+void			draw_sprite2(t_scene *scene, t_data *img, t_sprite_var *var);
+void			init_sprite_casting(t_scene *scene, t_sprite_var *var, int i);
 
 #endif
