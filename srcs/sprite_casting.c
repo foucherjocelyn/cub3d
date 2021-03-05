@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 18:50:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/01 18:33:22 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/04 02:39:24 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	draw_sprite(t_scene *scene, t_data *img, t_sprite_var *var)
 	{
 		var->tex_x = (int)(256 * (var->stripe -
 					(-var->sprite_width / 2 + var->sprite_screen_x))
-				* TEX_WIDTH / var->sprite_width) / 256;
+				* scene->texture[4].h / var->sprite_width) / 256;
 		if (var->transform_y > 0 && var->stripe > 0 && var->stripe <
 				scene->r_width && var->transform_y <
 				scene->player.z_buffer[var->stripe])
@@ -70,11 +70,11 @@ void	draw_sprite2(t_scene *scene, t_data *img, t_sprite_var *var)
 	unsigned int	color;
 
 	d = (var->y) * 256 - scene->r_height * 128 + var->sprite_height * 128;
-	var->tex_y = ((d * TEX_HEIGHT) / var->sprite_height) / 256;
+	var->tex_y = ((d * scene->texture[4].h) / var->sprite_height) / 256;
 	color = *(unsigned int*)(scene->texture[4].addr
 			+ (var->tex_y * scene->texture[4].line_length + var->tex_x
 				* (scene->texture[4].bits_per_pixel / 8)));
-	if ((color & 0x00FFFFFF) != 0)
+	if ((color != 0x000000))
 		my_mlx_pixel_put(img, var->stripe, var->y, color);
 }
 

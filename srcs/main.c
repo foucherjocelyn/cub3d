@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@11.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 1010/11/01 11:11:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/27 22:48:12 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/04 01:59:52 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	main(int argc, char **argv)
 	load_image(scene, &(scene->texture[2]), scene->west);
 	load_image(scene, &(scene->texture[3]), scene->east);
 	load_image(scene, &(scene->texture[4]), scene->sprite);
-	render(scene);
 	mlx_loop_hook(scene->mlx_ptr, render, scene);
 	mlx_hook(scene->win_ptr, 2, 1L << 0, key_press, scene);
 	mlx_loop(scene->mlx_ptr);

@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/01 18:32:16 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/04 01:55:34 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <math.h>
 # include "get_next_line/get_next_line.h"
 
-# define TEX_WIDTH 64
-# define TEX_HEIGHT 64
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
 # define KEY_W 119
