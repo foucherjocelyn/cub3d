@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/04 01:55:34 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/10 01:35:07 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,23 +100,24 @@ typedef struct	s_player {
 }				t_player;
 
 typedef struct	s_scene {
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_player	player;
-	int			r_width;
-	int			r_height;
-	char		*north;
-	char		*south;
-	char		*west;
-	char		*east;
-	char		*sprite;
-	int			floor;
-	int			ceiling;
-	int			nb_sprites;
-	t_sprite	*sprites;
-	char		**map;
-	t_data		*texture;
-	int			nb_map_lines;
+	void			*mlx_ptr;
+	void			*win_ptr;
+	t_player		player;
+	int				r_width;
+	int				r_height;
+	char			*north;
+	char			*south;
+	char			*west;
+	char			*east;
+	char			*sprite;
+	unsigned int	t_color;
+	int				floor;
+	int				ceiling;
+	int				nb_sprites;
+	t_sprite		*sprites;
+	char			**map;
+	t_data			*texture;
+	int				nb_map_lines;
 }				t_scene;
 
 typedef struct	s_elem {
@@ -159,5 +160,10 @@ void			init_draw_line2(t_scene *scene, t_ray_var *var);
 void			draw_sprite(t_scene *scene, t_data *img, t_sprite_var *var);
 void			draw_sprite2(t_scene *scene, t_data *img, t_sprite_var *var);
 void			init_sprite_casting(t_scene *scene, t_sprite_var *var, int i);
+void			error(char *msg);
+void			init_parsing(t_scene *scene);
+void			check_map(t_scene *scene);
+void			is_map_closed(t_scene *scene);
+void			are_space_around(t_scene *scene, int i, int j);
 
 #endif

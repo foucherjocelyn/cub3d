@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 18:50:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/04 02:39:24 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:16:21 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	draw_sprite2(t_scene *scene, t_data *img, t_sprite_var *var)
 	color = *(unsigned int*)(scene->texture[4].addr
 			+ (var->tex_y * scene->texture[4].line_length + var->tex_x
 				* (scene->texture[4].bits_per_pixel / 8)));
-	if ((color != 0x000000))
+//	if ((color != scene->t_color))
 		my_mlx_pixel_put(img, var->stripe, var->y, color);
 }
 
@@ -96,7 +96,6 @@ void	init_sprite_casting(t_scene *scene, t_sprite_var *var, int i)
 			scene->player.plane_y * sprite_x);
 	var->sprite_screen_x = (int)((scene->r_width / 2) *
 			(1 + var->transform_x / var->transform_y));
-	var->sprite_height = abs((int)(scene->r_height / (var->transform_y)));
 }
 
 void	sprite_casting(t_scene *scene, t_data *img)
@@ -108,7 +107,9 @@ void	sprite_casting(t_scene *scene, t_data *img)
 	i = 0;
 	while (i < scene->nb_sprites)
 	{
+//		printf("sprite : %d %f %f\n", i, scene->sprites[i].x, scene->sprites[i].y);
 		init_sprite_casting(scene, &var, i);
+		var.sprite_height = abs((int)(scene->r_height / (var.transform_y)));
 		var.draw_start_y = -var.sprite_height / 2 + scene->r_height / 2;
 		if (var.draw_start_y < 0)
 			var.draw_start_y = 0;
@@ -122,6 +123,7 @@ void	sprite_casting(t_scene *scene, t_data *img)
 		var.draw_end_x = var.sprite_width / 2 + var.sprite_screen_x;
 		if (var.draw_end_x >= scene->r_width)
 			var.draw_end_x = scene->r_width - 1;
+//		printf("width %d height %d\n", var.sprite_width, var.sprite_height);
 		draw_sprite(scene, img, &var);
 		i++;
 	}

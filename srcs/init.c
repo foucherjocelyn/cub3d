@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/28 01:34:24 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/10 01:34:11 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,20 @@
 
 void	init(t_scene *scene)
 {
+	int	size_x;
+	int	size_y;
+
+	check_map(scene);
 	scene->player.move_speed = 0.2;
 	scene->player.rot_speed = 0.1;
-	scene->player.z_buffer = malloc(sizeof(double) * scene->r_width);
 	find_player(scene);
 	find_sprite(scene);
+	mlx_get_screen_size(scene->mlx_ptr, &size_x, &size_y);
+	if (size_x < scene->r_width)
+		scene->r_width = size_x;
+	if (size_y < scene->r_height)
+		scene->r_height = size_y;
+	scene->player.z_buffer = malloc(sizeof(double) * scene->r_width);
 }
 
 void	find_dir(t_scene *scene, char player)
