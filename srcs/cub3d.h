@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/10 01:35:07 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/11 02:34:19 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ typedef struct	s_elem {
 	int		parsed;
 }				t_elem;
 
-int				render(t_scene *scene);
+int				render(t_scene *scene, int save);
 void			load_image(t_scene *scene, t_data *img, char *path);
 int				key_press(int keycode, t_scene *scene);
 void			init(t_scene *scene);
@@ -165,5 +165,9 @@ void			init_parsing(t_scene *scene);
 void			check_map(t_scene *scene);
 void			is_map_closed(t_scene *scene);
 void			are_space_around(t_scene *scene, int i, int j);
+void			count_players(t_scene *scene);
+int				ft_strcmp(char *s1, char *s2);
+void			save_bmp(t_scene *scene, t_data *img);
+void			bmp_header(t_scene *scene, t_data *img, int fd);
 
 #endif

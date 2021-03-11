@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 12:25:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/10 02:02:15 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/10 20:07:04 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,16 @@ int		charinstr(char *str, char c)
 
 void	count_map_lines(t_scene *scene, char *line)
 {
-	(void)line;
+	int	i;
+
+	i = 0;
+	if (!scene->r_width || !scene->r_height || !scene->north || !scene->south
+			|| !scene->west || !scene->east || !scene->sprite
+			|| scene->floor == -1 || scene->ceiling == -1)
+		error("element missing or invalid");
+	while (line[i])
+		if (!(charinstr(" 012NSEW", line[i++])))
+			error("invalid char in map");
 	scene->nb_map_lines += 1;
 }
 

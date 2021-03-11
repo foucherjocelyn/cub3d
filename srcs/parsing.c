@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 17:36:27 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/09 20:15:41 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/10 21:49:09 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,10 @@ void	parsing2(char *line, t_scene *scene)
 		p_color(line, &(scene->floor));
 	else if (line[0] == 'C' && line[1] == ' ')
 		p_color(line, &(scene->ceiling));
-	else if (line[0] != '\0')
+	else if (line[0] == '1' || line[0] == ' ')
 		count_map_lines(scene, line);
+	else if (line[0] == 0 && scene->nb_map_lines > 0)
+		error("empty line in map");
+	else if (line[0] != 0)
+		error ("invalid line");
 }

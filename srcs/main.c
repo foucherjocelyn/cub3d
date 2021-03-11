@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@11.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 1010/11/01 11:11:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/06 19:41:07 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/11 01:46:49 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	main(int argc, char **argv)
 	load_image(scene, &(scene->texture[3]), scene->east);
 	load_image(scene, &(scene->texture[4]), scene->sprite);
 	scene->t_color = *(unsigned int*)scene->texture[4].addr;
+	if (argc == 3 && ft_strcmp(argv[2], "--save"))
+		render(scene, 1);
 	mlx_loop_hook(scene->mlx_ptr, render, scene);
 	mlx_hook(scene->win_ptr, 2, 1L << 0, key_press, scene);
 	mlx_loop(scene->mlx_ptr);

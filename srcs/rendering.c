@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 19:11:12 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/09 18:43:28 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/11 02:44:30 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int		render(t_scene *scene)
+int		render(t_scene *scene, int save)
 {
 	t_data		img;
 	t_ray_var	var;
@@ -38,6 +38,8 @@ int		render(t_scene *scene)
 		x++;
 	}
 	sprite_casting(scene, &img);
+	if (save)
+		save_bmp(scene, &img);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, img.img, 0, 0);
 	mlx_destroy_image(scene->mlx_ptr, img.img);
 	return (0);
