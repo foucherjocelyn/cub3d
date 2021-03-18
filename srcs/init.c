@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:17:24 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 10:28:22 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 22:24:47 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	init(t_scene *scene)
 		scene->r_width = size_x;
 	if (size_y < scene->r_height)
 		scene->r_height = size_y;
-	scene->player.z_buffer = malloc(sizeof(double) * scene->r_width);
+	if (!(scene->player.z_buffer = malloc(sizeof(double) * scene->r_width)))
+		error("malloc error");
 }
 
 void	find_dir(t_scene *scene, char player)
@@ -110,7 +111,8 @@ void	find_sprite(t_scene *scene)
 	int	k;
 
 	count_sprite(scene);
-	scene->sprites = malloc(sizeof(t_sprite) * scene->nb_sprites);
+	if (!(scene->sprites = malloc(sizeof(t_sprite) * scene->nb_sprites)))
+		error("malloc error");
 	i = 0;
 	k = 0;
 	while (i < scene->nb_map_lines)

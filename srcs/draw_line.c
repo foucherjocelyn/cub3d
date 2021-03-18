@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:42:43 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 10:34:25 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 19:29:54 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	init_draw_line(t_scene *scene, t_ray_var *var)
 		var->draw_start = 0;
 	var->draw_end = var->line_height / 2 + scene->r_height / 2;
 	if (var->draw_end >= scene->r_height)
-		var->draw_end = scene->r_height - 1;
+		var->draw_end = scene->r_height;
 }
 
 void	init_draw_line2(t_scene *scene, t_ray_var *var)

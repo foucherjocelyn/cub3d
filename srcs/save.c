@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 01:42:46 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 03:31:05 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 22:34:23 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ void	save_bmp(t_scene *scene, t_data *img)
 		x = 0;
 		while (x < scene->r_width)
 		{
-			write(fd, img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8)), 4);
+			write(fd, img->addr + (y * img->line_length + x *
+						(img->bits_per_pixel / 8)), 4);
 			x++;
 		}
 		y--;
 	}
 	close(fd);
-	return;
 }

@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 02:34:19 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 22:50:51 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,5 +169,8 @@ void			count_players(t_scene *scene);
 int				ft_strcmp(char *s1, char *s2);
 void			save_bmp(t_scene *scene, t_data *img);
 void			bmp_header(t_scene *scene, t_data *img, int fd);
+int				ft_exit(void);
+int				ft_str_at_end(char *str, char *end);
+void			call_load(t_scene *scene);
 
 #endif

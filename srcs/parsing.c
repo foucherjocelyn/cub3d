@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 17:36:27 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/10 21:49:09 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 22:34:40 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	p_texture(char *line, char **texture)
 		error("multiple definitions of the same texture");
 	while (line[i] == ' ')
 		i++;
-	*texture = malloc(sizeof(char) * (ft_strlen(line) - i + 1));
+	if (!(*texture = malloc(sizeof(char) * (ft_strlen(line) - i + 1))))
+		error("malloc error");
 	while (line[i])
 	{
 		(*texture)[j] = line[i];
@@ -53,6 +54,8 @@ void	p_texture(char *line, char **texture)
 		j++;
 	}
 	(*texture)[j] = 0;
+	if (ft_strlen(*texture) < 5 || !ft_str_at_end(*texture, ".xpm"))
+		error("invalid texture");
 }
 
 void	p_res(char *line, t_scene *scene)
@@ -100,5 +103,5 @@ void	parsing2(char *line, t_scene *scene)
 	else if (line[0] == 0 && scene->nb_map_lines > 0)
 		error("empty line in map");
 	else if (line[0] != 0)
-		error ("invalid line");
+		error("invalid line");
 }

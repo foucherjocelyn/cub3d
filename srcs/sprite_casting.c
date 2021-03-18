@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 18:50:11 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 10:35:07 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 22:33:12 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	draw_sprite(t_scene *scene, t_data *img, t_sprite_var *var)
 		var->tex_x = (int)(256 * (var->stripe -
 					(-var->sprite_width / 2 + var->sprite_screen_x))
 				* scene->texture[4].h / var->sprite_width) / 256;
-		if (var->transform_y > 0 && var->stripe > 0 && var->stripe <
+		if (var->transform_y > 0 && var->stripe >= 0 && var->stripe <
 				scene->r_width && var->transform_y <
 				scene->player.z_buffer[var->stripe])
 		{
@@ -104,8 +104,8 @@ void	sprite_casting(t_scene *scene, t_data *img)
 	int				i;
 
 	sort_sprites(scene);
-	i = 0;
-	while (i < scene->nb_sprites)
+	i = -1;
+	while (++i < scene->nb_sprites)
 	{
 		init_sprite_casting(scene, &var, i);
 		var.sprite_height = abs((int)(scene->r_height / (var.transform_y)));
@@ -114,15 +114,15 @@ void	sprite_casting(t_scene *scene, t_data *img)
 			var.draw_start_y = 0;
 		var.draw_end_y = var.sprite_height / 2 + scene->r_height / 2;
 		if (var.draw_end_y >= scene->r_height)
-			var.draw_end_y = scene->r_height - 1;
-		var.sprite_width = abs((int)(((scene->r_width) / (var.transform_y))/ 1.32));
-		var.draw_start_x = -var.sprite_width / 2 + var.sprite_screen_x;
+			var.draw_end_y = scene->r_height;
+		var.sprite_width = abs((int)(((scene->r_width) /
+						(var.transform_y)) / 1.32) + 2);
+		var.draw_start_x = -var.sprite_width / 2 + var.sprite_screen_x + 1;
 		if (var.draw_start_x < 0)
 			var.draw_start_x = 0;
-		var.draw_end_x = var.sprite_width / 2 + var.sprite_screen_x;
+		var.draw_end_x = var.sprite_width / 2 + var.sprite_screen_x + 1;
 		if (var.draw_end_x >= scene->r_width)
-			var.draw_end_x = scene->r_width - 1;
+			var.draw_end_x = scene->r_width;
 		draw_sprite(scene, img, &var);
-		i++;
 	}
 }

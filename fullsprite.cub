@@ -1,10 +1,10 @@
-R 1920 1080
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
+R 1600 900
+NO pics/bluestone.xpm
+SO pics/eagle.xpm
+WE pics/redbrick.xpm
+EA pics/wood.xpm
 
-S ./path_to_the_sprite_texture
+S pics/barrel.xpm
 F 220,100,0
 C 225,30,0
 
@@ -13,7 +13,7 @@ C 225,30,0
     12222222222222221
 111112222222222222221
 122222222222222222211
-12222211111222222w221
+12222211111222222W221
 122222222222222222211
 122222222122222222221
 111122221111111111111
