@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 19:11:12 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/11 10:34:45 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 23:23:31 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	load_image(t_scene *scene, t_data *img, char *path)
 {
 	img->img = mlx_xpm_file_to_image(scene->mlx_ptr, path, &img->w, &img->h);
 	if (!img->img)
-		error("incorrect path");
+		error(scene, "incorrect path");
 	img->addr = mlx_get_data_addr(img->img, &(img->bits_per_pixel),
 	&(img->line_length), &(img->endian));
 }

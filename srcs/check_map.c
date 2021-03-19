@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 00:50:28 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/18 22:54:27 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/18 23:20:38 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void	count_players(t_scene *scene)
 			if (charinstr("NSEW", scene->map[i][j]))
 				count++;
 			if (count > 1)
-				error("more than 1 player");
+				error(scene, "more than 1 player");
 			j++;
 		}
 		i++;
 	}
 	if (count == 0)
-		error("player is missing");
+		error(scene, "player is missing");
 }
 
 void	is_map_closed(t_scene *scene)
@@ -58,10 +58,10 @@ void	is_map_closed(t_scene *scene)
 			{
 				if (i == 0 || j == 0 || i == scene->nb_map_lines - 1
 						|| j == ft_strlen(scene->map[i]) - 1)
-					error("map not closed");
+					error(scene, "map not closed");
 				else if (j >= ft_strlen(scene->map[i - 1])
 						|| j >= ft_strlen(scene->map[i + 1]))
-					error("map not closed");
+					error(scene, "map not closed");
 				else
 					are_space_around(scene, i, j);
 			}
@@ -75,5 +75,5 @@ void	are_space_around(t_scene *scene, int i, int j)
 {
 	if (scene->map[i - 1][j] == ' ' || scene->map[i + 1][j] == ' '
 			|| scene->map[i][j - 1] == ' ' || scene->map[i][j + 1] == ' ')
-		error("map not closed");
+		error(scene, "map not closed");
 }

@@ -6,7 +6,7 @@ NAME	= cub3D
 
 CC		= clang-9 
 
-CFLAGS	= -Wall -Werror -Wextra -g3 -ggdb3 -O0 -fsanitize=address
+CFLAGS	= -Wall -Werror -Wextra -O3
 
 RM		= rm -f
 

@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 19:02:22 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/02/25 22:24:17 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/19 00:12:13 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,6 @@ int		key_press(int keycode, t_scene *scene)
 	if (keycode == KEY_LEFT)
 		rotate_left(&(scene->player));
 	if (keycode == KEY_ESC)
-		exit(0);
+		ft_exit(scene);
 	return (0);
 }

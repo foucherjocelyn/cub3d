@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/30 16:16:48 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/18 22:50:51 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/19 15:14:36 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,12 +132,12 @@ void			init(t_scene *scene);
 void			find_sprite(t_scene *scene);
 char			*ft_strcpy(char *dest, char *src);
 void			parsing(char *file, t_scene *scene);
-void			p_texture(char *line, char **texture);
+void			p_texture(t_scene *scene, char *line, char **texture);
 void			parsing2(char *line, t_scene *scene);
 void			p_res(char *line, t_scene *scene);
-void			p_color(char *line, int *color);
-int				res_atoi(char *line);
-int				color_atoi(char *line, int *i);
+void			p_color(t_scene *scene, char *line, int *color);
+int				res_atoi(t_scene *scene, char *line);
+int				color_atoi(t_scene *scene, char *line, int *i);
 void			count_map_lines(t_scene *scene, char *line);
 int				charinstr(char *str, char c);
 void			parse_map(char *file, t_scene *scene);
@@ -160,7 +160,7 @@ void			init_draw_line2(t_scene *scene, t_ray_var *var);
 void			draw_sprite(t_scene *scene, t_data *img, t_sprite_var *var);
 void			draw_sprite2(t_scene *scene, t_data *img, t_sprite_var *var);
 void			init_sprite_casting(t_scene *scene, t_sprite_var *var, int i);
-void			error(char *msg);
+void			error(t_scene *scene, char *msg);
 void			init_parsing(t_scene *scene);
 void			check_map(t_scene *scene);
 void			is_map_closed(t_scene *scene);
@@ -169,8 +169,13 @@ void			count_players(t_scene *scene);
 int				ft_strcmp(char *s1, char *s2);
 void			save_bmp(t_scene *scene, t_data *img);
 void			bmp_header(t_scene *scene, t_data *img, int fd);
-int				ft_exit(void);
 int				ft_str_at_end(char *str, char *end);
 void			call_load(t_scene *scene);
+int				ft_exit(t_scene *scene);
+void			null_vars(t_scene *scene);
+void			free_map(t_scene *scene);
+void			free_texture(t_scene *scene);
+int				ft_atoi(char *line, int *i);
+void			free_and_error(t_scene *scene, char *msg, char *line);
 
 #endif

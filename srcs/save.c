@@ -6,7 +6,7 @@
 /*   By: jfoucher <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 01:42:46 by jfoucher          #+#    #+#             */
-/*   Updated: 2021/03/18 22:34:23 by jfoucher         ###   ########.fr       */
+/*   Updated: 2021/03/19 02:56:28 by jfoucher         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,6 @@ void	save_bmp(t_scene *scene, t_data *img)
 		y--;
 	}
 	close(fd);
+	mlx_destroy_image(scene->mlx_ptr, img->img);
+	ft_exit(scene);
 }
