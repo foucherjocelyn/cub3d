@@ -50,6 +50,8 @@ void	parse_map(char *file, t_scene *scene)
 	int		fd;
 	int		i;
 
+	if (scene->nb_map_lines <= 0)
+		error(scene, "map missing");
 	fd = open(file, O_RDONLY);
 	i = 0;
 	if (!(scene->map = malloc(sizeof(char*) * scene->nb_map_lines)))

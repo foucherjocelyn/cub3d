@@ -12,10 +12,15 @@
 
 #include "cub3d.h"
 
-int	ft_atoi(char *line, int *i)
+int	ft_atoi(t_scene *scene, char *line, int *i)
 {
 	int	result;
 
+	if (!(line[*i]))
+	{
+		free(line);
+		error(scene, "invalid color");
+	}
 	result = 0;
 	while (line[*i] >= '0' && line[*i] <= '9')
 	{
@@ -35,7 +40,7 @@ int	res_atoi(t_scene *scene, char *line)
 	result = 0;
 	while (line[i] == ' ')
 		i++;
-	result = ft_atoi(line, &i);
+	result = ft_atoi(scene, line, &i);
 	if (is_resy == 1 && line[i] != 0)
 	{
 		free(line);
@@ -61,7 +66,7 @@ int	color_atoi(t_scene *scene, char *line, int *i)
 	}
 	while (line[*i] == ' ')
 		(*i)++;
-	result = ft_atoi(line, i);
+	result = ft_atoi(scene, line, i);
 	if ((call == 3 && line[*i]) || result < 0 || result > 255)
 	{
 		free(line);

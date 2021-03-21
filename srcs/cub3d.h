@@ -12,7 +12,7 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
-# include "mlx.h"
+# include "../minilibx-linux/mlx.h"
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -175,7 +175,7 @@ int				ft_exit(t_scene *scene);
 void			null_vars(t_scene *scene);
 void			free_map(t_scene *scene);
 void			free_texture(t_scene *scene);
-int				ft_atoi(char *line, int *i);
+int				ft_atoi(t_scene *scene, char *line, int *i);
 void			free_and_error(t_scene *scene, char *msg, char *line);
 
 #endif

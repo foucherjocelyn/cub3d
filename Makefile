@@ -8,23 +8,29 @@ CC		= clang-9
 
 CFLAGS	= -Wall -Werror -Wextra -O3
 
-RM		= rm -f
+RM	= rm -f
+
+MLX_DIR	= minilibx-linux
 
 %.o : %.c
 		$(CC) $(CFLAGS) -c $< -o $@
 
+all:		mlx $(NAME)
+
 $(NAME):	$(OBJS)
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lmlx -lXext -lX11 -lm -lbsd
+			$(CC) $(CFLAGS) $(OBJS) -I./$(MLX_DIR) -lbsd -lm -lX11 -lXext -L ./$(MLX_DIR) -lmlx -o $(NAME)
 
 
-all:		$(NAME)
+mlx:		
+		$(MAKE) -C $(MLX_DIR)
 
 clean:
 			$(RM) $(OBJS)
 
 fclean:		clean
 			$(RM) $(NAME)
+			cd $(MLX_DIR) && make clean
 
 re:			fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all clean fclean re mlx
